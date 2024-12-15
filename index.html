@@ -5,49 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ANDROS status</title>
-  <!--<meta http-equiv="refresh" content="5" />-->
-  <!--<link href="css/style.css" rel="stylesheet">-->
+  <link href="index.css" rel="stylesheet">
 </head>
-<!--<script>-->
-<!--  async function getData(file, ip) {-->
-<!--    await fetch(file)-->
-<!--      .then((res) => {-->
-<!--        return res.json();-->
-<!--      })-->
-<!--      .then((json) => {-->
-<!--        let data = json.data-->
-<!--        let data_table = document.getElementById("data");-->
-<!--        data_table.innerHTML += `-->
-<!--            <tr>-->
-<!--              <th scope="col">${ip}</th>-->
-<!--              <th scope="col">${data.gps.longitude}</th>-->
-<!--              <th scope="col">${data.gps.latitude}</th>-->
-<!--              <th scope="col">${data.imu.angle}</th>-->
-<!--              <th scope="col">${data.aht.humidity}</th>-->
-<!--              <th scope="col">${data.aht.temperature}</th>-->
-<!--              <th scope="col">${data.wind.dir}</th>-->
-<!--              <th scope="col">${data.wind.speed}</th>-->
-<!--              <th scope="col">${data.bmp.pressure}</th>-->
-<!--              <th scope="col">${data.ina.bus_voltage}</th>-->
-<!--              <th scope="col">${data.ina.power}</th>-->
-<!--            </tr>-->
-<!--          `-->
-<!--        let statuses = json.statuses-->
-<!--        let status_table = document.getElementById("status");-->
-<!--        status_table.innerHTML += `-->
-<!--            <tr>-->
-<!--              <th scope="col">${ip}</th>-->
-<!--              <th scope="col">${statuses.gps}</th>-->
-<!--              <th scope="col">${statuses.imu}</th>-->
-<!--              <th scope="col">${statuses.aht}</th>-->
-<!--              <th scope="col">${statuses.wind}</th>-->
-<!--              <th scope="col">${statuses.bmp}</th>-->
-<!--              <th scope="col">${statuses.ina}</th>-->
-<!--            </tr>-->
-<!--          `-->
-<!--      });-->
-<!--  }-->
-<!--</script>-->
 
 <body>
   <table border="1" id="status">
@@ -86,9 +45,6 @@
     </tr>
   </table>
   <script type="text/javascript" src="/index.js"></script>
-  <!--<script>-->
-  <!--  getData("./data.json", "192.168.2.104")-->
-  <!--</script>-->
 </body>
 
 </html>

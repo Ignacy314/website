@@ -218,7 +218,7 @@ func (cs *chatServer) MonitorFile(ip, path string) {
 	go func() {
 		for scanner.Scan() {
 			msg := ip + " " + scanner.Text()
-			log.Printf("\t > %s\n", msg)
+			// log.Printf("\t > %s\n", msg)
 			cs.publish([]byte(msg))
 		}
 	}()
