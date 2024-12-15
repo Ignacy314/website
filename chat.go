@@ -55,7 +55,7 @@ func newChatServer() *chatServer {
 	cs.serveMux.HandleFunc("/subscribe", cs.subscribeHandler)
 	// cs.serveMux.HandleFunc("/publish", cs.publishHandler)
 
-	go cs.MonitorFile("192.168.2.104", "/home/iluvatar/projects/mics/website/data.json")
+	go cs.MonitorFile("192.168.2.104", "/home/test/mnt/test/data/data/data.json")
 
 	return cs
 }
