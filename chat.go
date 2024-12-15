@@ -1,17 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"errors"
-	"io"
-
-	// "io"
-	"bufio"
 	"log"
 	"net"
 	"net/http"
-
-	// "os"
 	"os/exec"
 	"sync"
 	"time"
