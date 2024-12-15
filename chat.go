@@ -205,10 +205,8 @@ func (cs *chatServer) MonitorFile(ip, path string) {
 	tail := "tail -F " + path
 	ssh := "test@" + ip
 	// log.Printf(ssh + " " + tail)
-	cmd := exec.Command("ssh", "-t", ssh, tail)
+	cmd := exec.Command("stdbuf", "-o0", "-e0", "ssh", "-t", ssh, tail)
 	// cmd := exec.Command("tail", "-F", path)
-
-	cmdCtx, cmdDone := context.WithCancel(context.Background())
 
 	// create a pipe for the output of the script
 	cmdReader, err := cmd.StdoutPipe()
@@ -232,13 +230,9 @@ func (cs *chatServer) MonitorFile(ip, path string) {
 		return
 	}
 
-	go func() {
-		err = cmd.Wait()
-		if err != nil {
-			log.Printf("Error waiting for tail for ip %v: %v", ip, err)
-			return
-		}
-		cmdDone()
-	}()
-	<-cmdCtx.Done()
+	err = cmd.Wait()
+	if err != nil {
+		log.Printf("Error waiting for tail for ip %v: %v", ip, err)
+		return
+	}
 }
