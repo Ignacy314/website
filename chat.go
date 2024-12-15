@@ -202,7 +202,9 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 }
 
 func (cs *chatServer) MonitorFile(ip, path string) {
-	cmd := exec.Command("tail", "-f", path)
+	tail := "\"" + "tail -F " + path + "\""
+	ssh := "ssh test@" + ip
+	cmd := exec.Command(ssh, tail)
 
 	// create a pipe for the output of the script
 	cmdReader, err := cmd.StdoutPipe()
