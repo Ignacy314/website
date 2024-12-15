@@ -212,36 +212,36 @@ func (cs *chatServer) MonitorFile(ip, path string) {
 	// cmd := exec.Command("tail", "-F", path)
 
 	// create a pipe for the output of the script
-	// cmdReader, err := cmd.StdoutPipe()
-	// if err != nil {
-	// 	log.Printf("Error creating StdoutPipe for ip %v: %v", ip, err)
-	// 	return
-	// }
-
-	var err error
-
-	var out io.Reader
-	{
-		var stdout, stderr io.ReadCloser
-
-		stdout, err = cmd.StdoutPipe()
-		if err != nil {
-			log.Fatal(err)
-		}
-		stderr, err = cmd.StderrPipe()
-		if err != nil {
-			log.Fatal(err)
-		}
-		out = io.MultiReader(stdout, stderr)
-	}
-
-	if err = cmd.Start(); err != nil {
-		log.Printf("Error starting tail for ip %v: %v", ip, err)
-		// log.Fatal(err)
+	cmdReader, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Printf("Error creating StdoutPipe for ip %v: %v", ip, err)
 		return
 	}
 
-	scanner := bufio.NewScanner(out)
+	// var err error
+	//
+	// var out io.Reader
+	// {
+	// 	var stdout, stderr io.ReadCloser
+	//
+	// 	stdout, err = cmd.StdoutPipe()
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	stderr, err = cmd.StderrPipe()
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	out = io.MultiReader(stdout, stderr)
+	// }
+	//
+	// if err = cmd.Start(); err != nil {
+	// 	log.Printf("Error starting tail for ip %v: %v", ip, err)
+	// 	// log.Fatal(err)
+	// 	return
+	// }
+
+	scanner := bufio.NewScanner(cmdReader)
 	go func() {
 		for scanner.Scan() {
 			msg := ip + " " + scanner.Text()
