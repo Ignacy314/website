@@ -202,7 +202,7 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 }
 
 func (cs *chatServer) MonitorFile(ip, path string) {
-	tail := "tail -F " + path
+	tail := "tail -F " + path + " | cat"
 	ssh := "test@" + ip
 	log.Printf(ssh + " " + tail)
 	cmd := exec.Command("ssh", ssh, tail)
