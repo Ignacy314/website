@@ -248,11 +248,11 @@ func (cs *chatServer) MonitorFile(ip, path string) {
 		}
 	}()
 
-	// err = cmd.Start()
-	// if err != nil {
-	// 	log.Printf("Error starting tail for ip %v: %v", ip, err)
-	// 	return
-	// }
+	err = cmd.Start()
+	if err != nil {
+		log.Printf("Error starting tail for ip %v: %v", ip, err)
+		return
+	}
 
 	err = cmd.Wait()
 	if err != nil {
