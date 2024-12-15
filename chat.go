@@ -1,12 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"errors"
+	// "io"
+	"bufio"
 	"log"
 	"net"
 	"net/http"
+	// "os"
 	"os/exec"
 	"sync"
 	"time"
@@ -53,8 +55,7 @@ func newChatServer() *chatServer {
 	cs.serveMux.HandleFunc("/subscribe", cs.subscribeHandler)
 	// cs.serveMux.HandleFunc("/publish", cs.publishHandler)
 
-	// go cs.MonitorFile("192.168.2.104", "/home/test/andros/data/data/data.json")
-	go cs.MonitorFile("192.168.2.104", "/home/test/data.json")
+	go cs.MonitorFile("192.168.2.104", "/home/test/andros/data/data/data.json")
 
 	return cs
 }
@@ -201,11 +202,10 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 }
 
 func (cs *chatServer) MonitorFile(ip, path string) {
-	// tail := "tail -F " + path
-	// ssh := "test@" + ip
+	tail := "tail -F " + path
+	ssh := "test@" + ip
 	// log.Printf(ssh + " " + tail)
-	// cmd := exec.Command("ssh", ssh, tail)
-	cmd := exec.Command("tail", "-F", path)
+	cmd := exec.Command("ssh", ssh, tail)
 
 	// create a pipe for the output of the script
 	cmdReader, err := cmd.StdoutPipe()
@@ -214,38 +214,12 @@ func (cs *chatServer) MonitorFile(ip, path string) {
 		return
 	}
 
-	// var err error
-	//
-	// var out io.Reader
-	// {
-	// 	var stdout, stderr io.ReadCloser
-	//
-	// 	stdout, err = cmd.StdoutPipe()
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	stderr, err = cmd.StderrPipe()
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	out = io.MultiReader(stdout, stderr)
-	// }
-	//
-	// if err = cmd.Start(); err != nil {
-	// 	log.Printf("Error starting tail for ip %v: %v", ip, err)
-	// 	// log.Fatal(err)
-	// 	return
-	// }
-
 	scanner := bufio.NewScanner(cmdReader)
 	go func() {
 		for scanner.Scan() {
 			msg := ip + " " + scanner.Text()
 			log.Printf("\t > %s\n", msg)
 			cs.publish([]byte(msg))
-		}
-		if err = scanner.Err(); err != nil {
-			log.Printf("error: %v\n", err)
 		}
 	}()
 
