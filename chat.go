@@ -54,7 +54,7 @@ func newChatServer() *chatServer {
 	// cs.serveMux.HandleFunc("/publish", cs.publishHandler)
 
 	// go cs.MonitorFile("192.168.2.104", "/home/test/andros/data/data/data.json")
-	go cs.MonitorFile("192.168.2.104", "/home/test/website/data/104")
+	go cs.MonitorFile("192.168.2.104", "/home/test/data.json")
 
 	return cs
 }
