@@ -208,7 +208,7 @@ func (cs *chatServer) MonitorFile(ip, path string) {
 	tail := "tail -F " + path
 	ssh := "test@" + ip
 	// log.Printf(ssh + " " + tail)
-	cmd := exec.Command("ssh", ssh, tail)
+	cmd := exec.Command("stdbuf", "-o0", "-e0", "ssh", ssh, tail)
 	// cmd := exec.Command("tail", "-F", path)
 
 	// create a pipe for the output of the script
