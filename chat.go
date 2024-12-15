@@ -3,11 +3,14 @@ package main
 import (
 	"context"
 	"errors"
+	"io"
+
 	// "io"
 	"bufio"
 	"log"
 	"net"
 	"net/http"
+
 	// "os"
 	"os/exec"
 	"sync"
@@ -209,26 +212,52 @@ func (cs *chatServer) MonitorFile(ip, path string) {
 	// cmd := exec.Command("tail", "-F", path)
 
 	// create a pipe for the output of the script
-	cmdReader, err := cmd.StdoutPipe()
-	if err != nil {
-		log.Printf("Error creating StdoutPipe for ip %v: %v", ip, err)
+	// cmdReader, err := cmd.StdoutPipe()
+	// if err != nil {
+	// 	log.Printf("Error creating StdoutPipe for ip %v: %v", ip, err)
+	// 	return
+	// }
+
+	var err error
+
+	var out io.Reader
+	{
+		var stdout, stderr io.ReadCloser
+
+		stdout, err = cmd.StdoutPipe()
+		if err != nil {
+			log.Fatal(err)
+		}
+		stderr, err = cmd.StderrPipe()
+		if err != nil {
+			log.Fatal(err)
+		}
+		out = io.MultiReader(stdout, stderr)
+	}
+
+	if err = cmd.Start(); err != nil {
+		log.Printf("Error starting tail for ip %v: %v", ip, err)
+		// log.Fatal(err)
 		return
 	}
 
-	scanner := bufio.NewScanner(cmdReader)
+	scanner := bufio.NewScanner(out)
 	go func() {
 		for scanner.Scan() {
 			msg := ip + " " + scanner.Text()
 			log.Printf("\t > %s\n", msg)
 			cs.publish([]byte(msg))
 		}
+		if err = scanner.Err(); err != nil {
+			log.Printf("error: %v\n", err)
+		}
 	}()
 
-	err = cmd.Start()
-	if err != nil {
-		log.Printf("Error starting tail for ip %v: %v", ip, err)
-		return
-	}
+	// err = cmd.Start()
+	// if err != nil {
+	// 	log.Printf("Error starting tail for ip %v: %v", ip, err)
+	// 	return
+	// }
 
 	err = cmd.Wait()
 	if err != nil {
