@@ -1,14 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"errors"
-	// "io"
-	"bufio"
 	"log"
 	"net"
 	"net/http"
-	// "os"
 	"os/exec"
 	"sync"
 	"time"
@@ -55,7 +53,12 @@ func newChatServer() *chatServer {
 	cs.serveMux.HandleFunc("/subscribe", cs.subscribeHandler)
 	// cs.serveMux.HandleFunc("/publish", cs.publishHandler)
 
-	go cs.MonitorFile("192.168.2.104", "/home/test/andros/data/data/data.json")
+	path := "/home/test/andros/data/data/data.json"
+	ips := []string{"192.168.2.104"}
+	for _, ip := range ips {
+		go cs.MonitorFile(ip, path)
+	}
+	// go cs.MonitorFile("192.168.2.104", "/home/test/andros/data/data/data.json")
 
 	return cs
 }
@@ -202,36 +205,37 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 }
 
 func (cs *chatServer) MonitorFile(ip, path string) {
-	tail := "tail -F " + path
-	ssh := "test@" + ip
-	// log.Printf(ssh + " " + tail)
-	cmd := exec.Command("ssh", ssh, tail)
+	for {
 
-	// create a pipe for the output of the script
-	cmdReader, err := cmd.StdoutPipe()
-	if err != nil {
-		log.Printf("Error creating StdoutPipe for ip %v: %v", ip, err)
-		return
-	}
+		tail := "tail -F " + path
+		ssh := "test@" + ip
+		// log.Printf(ssh + " " + tail)
+		cmd := exec.Command("ssh", ssh, tail)
 
-	scanner := bufio.NewScanner(cmdReader)
-	go func() {
-		for scanner.Scan() {
-			msg := ip + " " + scanner.Text()
-			// log.Printf("\t > %s\n", msg)
-			cs.publish([]byte(msg))
+		// create a pipe for the output of the script
+		cmdReader, err := cmd.StdoutPipe()
+		if err != nil {
+			log.Printf("Error creating StdoutPipe for ip %v: %v", ip, err)
 		}
-	}()
 
-	err = cmd.Start()
-	if err != nil {
-		log.Printf("Error starting tail for ip %v: %v", ip, err)
-		return
-	}
+		scanner := bufio.NewScanner(cmdReader)
+		go func() {
+			for scanner.Scan() {
+				msg := ip + " " + scanner.Text()
+				// log.Printf("\t > %s\n", msg)
+				cs.publish([]byte(msg))
+			}
+		}()
 
-	err = cmd.Wait()
-	if err != nil {
-		log.Printf("Error waiting for tail for ip %v: %v", ip, err)
-		return
+		err = cmd.Start()
+		if err != nil {
+			log.Printf("Error starting tail for ip %v: %v", ip, err)
+		}
+
+		err = cmd.Wait()
+		if err != nil {
+			log.Printf("Error waiting for tail for ip %v: %v", ip, err)
+		}
+		time.Sleep(1 * time.Second)
 	}
 }

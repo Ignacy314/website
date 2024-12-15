@@ -39,12 +39,13 @@
   }
 
   function dial() {
+    console.log(location.host)
     const conn = new WebSocket(`ws://${location.host}/subscribe`)
 
     conn.addEventListener('close', ev => {
-      appendLog(`WebSocket Disconnected code: ${ev.code}, reason: ${ev.reason}`, true)
+      console.log(`WebSocket Disconnected code: ${ev.code}, reason: ${ev.reason}`, true)
       if (ev.code !== 1001) {
-        appendLog('Reconnecting in 1s', true)
+        console.log('Reconnecting in 1s', true)
         setTimeout(dial, 1000)
       }
     })
