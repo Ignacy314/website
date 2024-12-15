@@ -55,7 +55,7 @@ func newChatServer() *chatServer {
 	cs.serveMux.HandleFunc("/subscribe", cs.subscribeHandler)
 	// cs.serveMux.HandleFunc("/publish", cs.publishHandler)
 
-	go cs.MonitorFile("192.168.2.104", "/home/test/andros/data/data/data.json")
+	go cs.MonitorFile("192.168.2.104", "/home/test/data.json")
 
 	return cs
 }
@@ -202,10 +202,11 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 }
 
 func (cs *chatServer) MonitorFile(ip, path string) {
-	tail := "'tail -F " + path + "'"
-	ssh := "test@" + ip
-	log.Printf(ssh + " " + tail)
-	cmd := exec.Command("ssh", ssh, tail)
+	// tail := "'tail -F " + path + "'"
+	// ssh := "test@" + ip
+	// log.Printf(ssh + " " + tail)
+	// cmd := exec.Command("ssh", ssh, tail)
+  cmd := exec.Command("tail", "-F", path)
 
 	// create a pipe for the output of the script
 	cmdReader, err := cmd.StdoutPipe()
