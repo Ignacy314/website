@@ -22,6 +22,8 @@
       <th></th>
       <th></th>
       <th></th>
+      <th></th>
+      <th></th>
     `
     data_tr.innerHTML = `
       <th scope="col"></th>
@@ -76,6 +78,8 @@
       <th>${statuses.wind}</th>
       <th>${statuses.bmp}</th>
       <th>${statuses.ina}</th>
+      <th>${statuses.i2s}</th>
+      <th>${statuses.umc}</th>
     `
     data_tr.innerHTML = `
       <th scope="col">${ip}</th>
