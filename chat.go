@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"os/exec"
 	"sync"
 	"time"
@@ -39,10 +40,26 @@ type chatServer struct {
 
 	subscribersMu sync.Mutex
 	subscribers   map[*subscriber]struct{}
+	ips_msg []byte
+}
+
+func readLines(path string) ([]string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
 }
 
 // newChatServer constructs a chatServer with the defaults.
-func newChatServer() *chatServer {
+func newChatServer() (*chatServer, error) {
 	cs := &chatServer{
 		subscriberMessageBuffer: 16,
 		logf:                    log.Printf,
@@ -54,13 +71,21 @@ func newChatServer() *chatServer {
 	// cs.serveMux.HandleFunc("/publish", cs.publishHandler)
 
 	path := "/home/test/andros/data/data/data.json"
-	ips := []string{"192.168.2.104"}
+	// ips := []string{"192.168.2.104"}
+	msg := "ips\n"
+	ips, err := readLines("/home/test/ips")
+	if err != nil {
+		log.Printf("Failed to read ips from file: %v", err)
+	}
 	for _, ip := range ips {
+		msg += ip + "\n"
 		go cs.MonitorFile(ip, path)
 	}
+	cs.ips_msg = []byte(msg)
+	// cs.publish([]byte(msg))
 	// go cs.MonitorFile("192.168.2.104", "/home/test/andros/data/data/data.json")
 
-	return cs
+	return cs, err
 }
 
 // subscriber represents a subscriber.
@@ -152,6 +177,11 @@ func (cs *chatServer) subscribe(w http.ResponseWriter, r *http.Request) error {
 
 	ctx := c.CloseRead(context.Background())
 
+  err = writeTimeout(ctx, time.Second*5, c, cs.ips_msg)
+  if err != nil {
+    return err
+  }
+
 	for {
 		select {
 		case msg := <-s.msgs:
@@ -205,8 +235,8 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 }
 
 func (cs *chatServer) MonitorFile(ip, path string) {
+  log.Printf("Monitoring file: %v%v", ip, path)
 	for {
-
 		tail := "tail -F " + path
 		ssh := "test@" + ip
 		// log.Printf(ssh + " " + tail)

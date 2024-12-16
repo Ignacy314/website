@@ -33,7 +33,10 @@ func run() error {
 	}
 	log.Printf("listening on ws://%v", l.Addr())
 
-	cs := newChatServer()
+	cs, err := newChatServer()
+	if err != nil {
+	  return err
+  }
 	s := &http.Server{
 		Handler:      cs,
 		ReadTimeout:  time.Second * 10,
