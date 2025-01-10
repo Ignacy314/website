@@ -134,6 +134,7 @@
           }
         })
 
+        console.log(map)
         var status_tr
         var data_tr
         if (mac in map) {
