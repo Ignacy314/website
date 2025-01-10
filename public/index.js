@@ -115,6 +115,18 @@
         const data_json = JSON.parse(s[1])
         const statuses = data_json.statuses
         const data = data_json.data
+
+        Object.keys(statuses).forEach(function(key) {
+          if(statuses[key] === null) {
+            statuses[key] = 'None';
+          }
+        })
+        Object.keys(data).forEach(function(key) {
+          if(data[key] === null) {
+            data[key] = 'None';
+          }
+        })
+
         var status_tr
         var data_tr
         if (ip in map) {
