@@ -6,7 +6,7 @@
 
   var ips
   var n
-  var map
+  var map = {}
 
   function dial() {
     console.log(location.host)
