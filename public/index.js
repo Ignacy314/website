@@ -10,7 +10,7 @@
 
   function dial() {
     console.log(location.host)
-    const conn = new WebSocket(`ws://${location.host}/subscribe`)
+    const conn = new WebSocket(`ws://${location.host}/andros/subscribe`)
 
     conn.addEventListener('close', ev => {
       console.log(`WebSocket Disconnected code: ${ev.code}, reason: ${ev.reason}`, true)
@@ -109,14 +109,29 @@
           `
         }
       } else {
+        //console.log(ev.data)
         const s = ev.data.split(" ")
         const ip = s[0]
         const data_json = JSON.parse(s[1])
         const statuses = data_json.statuses
         const data = data_json.data
-        const trs = map[ip]
-        const status_tr = trs.status
-        const data_tr = trs.data
+        var status_tr
+        var data_tr
+        if (ip in map) {
+          const trs = map[ip]
+          status_tr = trs.status
+          data_tr = trs.data
+        } else {
+          status_tr = status_table.insertRow(-1)
+          data_tr = data_table.insertRow(-1)
+          map[ip] = {
+            data: data_tr,
+            status: status_tr
+          }
+        }
+        //const trs = map[ip]
+        //const status_tr = trs.status
+        //const data_tr = trs.data
         status_tr.innerHTML = `
           <th>${ip}</th>
           <th>${new Date().toLocaleTimeString()}</th>

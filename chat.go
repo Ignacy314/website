@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"errors"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -66,20 +67,20 @@ func newChatServer() (*chatServer, error) {
 		subscribers:             make(map[*subscriber]struct{}),
 		publishLimiter:          rate.NewLimiter(rate.Every(time.Millisecond*100), 8),
 	}
-	cs.serveMux.Handle("/", http.FileServer(http.Dir(".")))
-	cs.serveMux.HandleFunc("/subscribe", cs.subscribeHandler)
-	// cs.serveMux.HandleFunc("/publish", cs.publishHandler)
+	cs.serveMux.Handle("/andros/", http.StripPrefix("/andros", http.FileServer(http.Dir("./public"))))
+	cs.serveMux.HandleFunc("/andros/subscribe", cs.subscribeHandler)
+	cs.serveMux.HandleFunc("/andros/publish", cs.publishHandler)
 
-	path := "/home/test/andros/data/data/data.json"
+	// path := "/home/test/andros/data/data/data.json"
 	// ips := []string{"192.168.2.104"}
 	msg := "ips\n"
-	ips, err := readLines("/home/test/ips")
+	ips, err := readLines("./ips")
 	if err != nil {
 		log.Printf("Failed to read ips from file: %v", err)
 	}
 	for _, ip := range ips {
 		msg += ip + "\n"
-		go cs.MonitorFile(ip, path)
+		// go cs.MonitorFile(ip, path)
 	}
 	cs.ips_msg = []byte(msg)
 	// cs.publish([]byte(msg))
@@ -119,22 +120,24 @@ func (cs *chatServer) subscribeHandler(w http.ResponseWriter, r *http.Request) {
 
 // publishHandler reads the request body with a limit of 8192 bytes and then publishes
 // the received message.
-// func (cs *chatServer) publishHandler(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method != "POST" {
-// 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-// 		return
-// 	}
-// 	body := http.MaxBytesReader(w, r.Body, 8192)
-// 	msg, err := io.ReadAll(body)
-// 	if err != nil {
-// 		http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
-// 		return
-// 	}
-//
-// 	cs.publish(msg)
-//
-// 	w.WriteHeader(http.StatusAccepted)
-// }
+func (cs *chatServer) publishHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
+	body := http.MaxBytesReader(w, r.Body, 8192)
+	msg, err := io.ReadAll(body)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
+		return
+	}
+
+	// cs.logf("%v", msg)
+
+	cs.publish(msg)
+
+	w.WriteHeader(http.StatusAccepted)
+}
 
 // subscribe subscribes the given WebSocket to all broadcast messages.
 // It creates a subscriber with a buffered msgs chan to give some room to slower
