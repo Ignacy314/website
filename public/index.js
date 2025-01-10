@@ -39,6 +39,7 @@
         status_table.innerHTML = `
           <tr>
             <th>Local IP</th>
+            <th>MAC</th>
             <th>UPDATED</th>
             <th>GPS</th>
             <th>IMU</th>
@@ -53,6 +54,7 @@
         data_table.innerHTML = `
           <tr>
             <th colspan="1" rowspan="2" scope="colgroup">Local IP</th>
+            <th colspan="1" rowspan="2" scope="colgroup">MAC</th>
             <th colspan="2" scope="colgroup">GPS</th>
             <th colspan="1" scope="colgroup">IMU</th>
             <th colspan="2" scope="colgroup">AHT</th>
@@ -84,6 +86,7 @@
           }
           status_tr.innerHTML = `
             <th>${ip}</th>
+            <th></th>
             <th>${new Date().toLocaleTimeString()}</th>
             <th></th>
             <th></th>
@@ -106,13 +109,15 @@
             <th scope="col"></th>
             <th scope="col"></th>
             <th scope="col"></th>
+            <th scope="col"></th>
           `
         }
       } else {
         //console.log(ev.data)
         const s = ev.data.split(" ")
         const ip = s[0]
-        const data_json = JSON.parse(s[1])
+        const mac = s[1]
+        const data_json = JSON.parse(s[2])
         const statuses = data_json.statuses
         const data = data_json.data
 
@@ -146,6 +151,7 @@
         //const data_tr = trs.data
         status_tr.innerHTML = `
           <th>${ip}</th>
+          <th>${mac}</th>
           <th>${new Date().toLocaleTimeString()}</th>
           <th>${statuses.gps}</th>
           <th>${statuses.imu}</th>
@@ -158,6 +164,7 @@
         `
         data_tr.innerHTML = `
           <th scope="col">${ip}</th>
+          <th scope="col">${mac}</th>
           <th scope="col">${data.gps.longitude}</th>
           <th scope="col">${data.gps.latitude}</th>
           <th scope="col">${data.imu.angle}</th>
