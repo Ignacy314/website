@@ -156,6 +156,7 @@
           <th>${ip}</th>
           <th>${mac}</th>
           <th>${new Date().toLocaleTimeString()}</th>
+          <th>${statuses.free_space}</th>
           <th>${statuses.gps}</th>
           <th>${statuses.imu}</th>
           <th>${statuses.aht}</th>
