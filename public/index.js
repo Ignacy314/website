@@ -71,7 +71,7 @@
       console.info('websocket connected')
     })
 
-    map = {}
+    //map = {}
     // This is where we handle messages received.
     conn.addEventListener('message', ev => {
       if (typeof ev.data !== 'string') {
