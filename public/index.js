@@ -167,7 +167,7 @@
         const s = ev.data.split(" ")
         const ip = s[0]
         const mac = s[1].slice(-1)
-        //console.log(mac)
+        console.log(mac)
         const data_json = JSON.parse(s[2])
         const statuses = data_json.statuses
         const data = data_json.data
@@ -188,7 +188,7 @@
         var data_tr
         //console.log(mac)
         //console.log(typeof(mac))
-        //console.log(map[mac])
+        console.log(map[mac])
         if (mac in map && map[mac] != null) {
           const trs = map[mac]
           status_tr = trs.status
