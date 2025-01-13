@@ -163,6 +163,7 @@
         //}
       } else {
         //console.log(ev.data)
+        console.log(map)
         const s = ev.data.split(" ")
         const ip = s[0]
         const mac = s[1]
