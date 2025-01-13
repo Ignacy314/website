@@ -185,6 +185,9 @@
         //console.log(map)
         var status_tr
         var data_tr
+        console.log(mac)
+        console.log(typeof(mac))
+        console.log(map[mac])
         if (mac in map && map[mac] != null) {
           const trs = map[mac]
           status_tr = trs.status
