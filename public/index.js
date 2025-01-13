@@ -94,7 +94,7 @@
       `
       data_tr.innerHTML = `
         <th scope="col"></th>
-        <th scope="col">${mac}</th>
+        <th scope="col">${key}</th>
         <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
