@@ -25,12 +25,12 @@
         shouldSwitch = false;
         /* Get the two elements you want to compare,
         one from current row and one from the next: */
-        x = rows[i].getElementsByTagName("th")[0].split(".");
+        x = rows[i].getElementsByTagName("th")[0].innerHTML.split(".");
         x = parseInt([x.length - 1])
-        y = rows[i + 1].getElementsByTagName("th")[0];
+        y = rows[i + 1].getElementsByTagName("th")[0].innerHTML;
         y = parseInt([y.length - 1])
         // Check if the two rows should switch place:
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        if (x > y) {
           // If so, mark as a switch and break the loop:
           shouldSwitch = true;
           break;
