@@ -71,6 +71,43 @@
       console.info('websocket connected')
     })
 
+    Object.keys(map).forEach(function(key) {
+      var status_tr = status_table.insertRow(-1)
+      var data_tr = data_table.insertRow(-1)
+      map[key] = {
+        data: data_tr,
+        status: status_tr
+      }
+      status_tr.innerHTML = `
+        <th></th>
+        <th>${key}</th>
+        <th>${new Date().toLocaleTimeString()}</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      `
+      data_tr.innerHTML = `
+        <th scope="col"></th>
+        <th scope="col">${mac}</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      `
+    })
+
     //map = {}
     // This is where we handle messages received.
     conn.addEventListener('message', ev => {
