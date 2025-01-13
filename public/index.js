@@ -166,7 +166,7 @@
         //console.log(map)
         const s = ev.data.split(" ")
         const ip = s[0]
-        const mac = s[1].slice(-1)
+        const mac = s[1].slice(0, -1)
         console.log(mac)
         const data_json = JSON.parse(s[2])
         const statuses = data_json.statuses
