@@ -44,6 +44,9 @@
         this.value += this.delay;
       }
       this.display.innerHTML = this.formatTime(this.value);
+      if (this.value > 5000) {
+        this.display.style.color = "#FF0000"
+      }
     }
 
     start() {
