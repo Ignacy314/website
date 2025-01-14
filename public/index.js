@@ -27,19 +27,19 @@
   class Stopwatch {
     constructor(elem) {
       this.startTime = new Date().getTime()
-      this.stopwatchInterval = setInterval(this.update, 1000)
+      this.stopwatchInterval = setInterval(this.update(elem), 1000)
       this.elem = elem
       elem.innerHTML = "00:00:00"
     }
 
-    update() {
+    update(elem) {
       var currentTime = new Date().getTime()
       var elapsedTime = currentTime - this.startTime
       var seconds = Math.floor(elapsedTime / 1000) % 60
       var minutes = Math.floor(elapsedTime / 1000 / 60) % 60
       var hours = Math.floor(elapsedTime / 1000 / 60 / 60)
       var displayTime = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds)
-      this.elem.innerHTML = displayTime
+      elem.innerHTML = displayTime
     }
   }
 
