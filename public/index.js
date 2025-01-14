@@ -19,6 +19,11 @@
     '86:67': null,
   }
 
+  function pad(number) {
+    // add a leading zero if the number is less than 10
+    return (number < 10 ? "0" : "") + number;
+  }
+
   class Stopwatch {
     constructor(elem) {
       this.startTime = new Date().getTime()
