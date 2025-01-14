@@ -76,12 +76,14 @@
       var data_tr = data_table.insertRow(-1)
       map[key] = {
         data: data_tr,
-        status: status_tr
+        status: status_tr,
+        stopwatch: null
       }
       status_tr.innerHTML = `
         <th></th>
         <th>${key}</th>
         <th>${new Date().toLocaleTimeString()}</th>
+        <th id="${mac}"></th>
         <th></th>
         <th></th>
         <th></th>
@@ -106,6 +108,8 @@
         <th scope="col"></th>
         <th scope="col"></th>
       `
+
+      map[key].stopwatch = new Stopwatch()
     })
 
     //map = {}
@@ -230,12 +234,14 @@
           const trs = map[mac]
           status_tr = trs.status
           data_tr = trs.data
+          trs.stopwatch = null
         } else {
           status_tr = status_table.insertRow(-1)
           data_tr = data_table.insertRow(-1)
           map[mac] = {
             data: data_tr,
-            status: status_tr
+            status: status_tr,
+            stopwatch: null
           }
         }
         //const trs = map[ip]
@@ -245,6 +251,7 @@
           <th>${ip}</th>
           <th>${mac}</th>
           <th>${new Date().toLocaleTimeString()}</th>
+          <th id="${mac}"></th>
           <th>${statuses.free}</th>
           <th>${statuses.gps}</th>
           <th>${statuses.imu}</th>
@@ -269,12 +276,32 @@
           <th scope="col">${data.ina.bus_voltage}</th>
           <th scope="col">${data.ina.power}</th>
         `
+
+        map[mac].stopwatch = new Stopwatch()
         //sortTable("status")
         //sortTable("data")
       }
     })
   }
   dial()
+
+  class Stopwatch {
+    constructor(elem) {
+      this.startTime = new Date().getTime()
+      this.stopwatchInterval = setInterval(this.update, 1000)
+      this.elem = elem
+      elem.innerHTML = "00:00:00"
+    }
+
+    update() {
+      var elapsedTime = currentTime - this.startTime
+      var seconds = Math.floor(elapsedTime / 1000) % 60
+      var minutes = Math.floor(elapsedTime / 1000 / 60) % 60
+      var hours = Math.floor(elapsedTime / 1000 / 60 / 60)
+      var displayTime = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds)
+      this.elem.innerHTML = displayTime
+    }
+  }
 
   //// appendLog appends the passed text to messageLog.
   //function appendLog(text, error) {
