@@ -28,6 +28,7 @@
     }
 
     update() {
+      var currentTime = new Date().getTime()
       var elapsedTime = currentTime - this.startTime
       var seconds = Math.floor(elapsedTime / 1000) % 60
       var minutes = Math.floor(elapsedTime / 1000 / 60) % 60
@@ -128,7 +129,7 @@
         <th scope="col"></th>
       `
 
-      map[key].stopwatch = new Stopwatch()
+      map[key].stopwatch = new Stopwatch(document.getElementById(key))
     })
 
     //map = {}
@@ -296,7 +297,7 @@
           <th scope="col">${data.ina.power}</th>
         `
 
-        map[mac].stopwatch = new Stopwatch()
+        map[mac].stopwatch = new Stopwatch(document.getElementById(mac))
         //sortTable("status")
         //sortTable("data")
       }
