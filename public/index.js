@@ -43,9 +43,12 @@
       if (this.state=="running") {
         this.value += this.delay;
       }
-      this.display.innerHTML = this.formatTime(this.value);
+      //this.display.innerHTML = "<div>" + this.formatTime(this.value) + "</div>";
       if (this.value > 5000) {
-        this.display.style.color = "#FF0000"
+        this.display.innerHTML = "<div style='color: red'>" + this.formatTime(this.value) + "</div>";
+        //this.display.style.color = "#FF0000"
+      } else {
+        this.display.innerHTML = "<div>" + this.formatTime(this.value) + "</div>";
       }
     }
 
