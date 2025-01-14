@@ -83,7 +83,7 @@
         <th></th>
         <th>${key}</th>
         <th>${new Date().toLocaleTimeString()}</th>
-        <th id="${mac}"></th>
+        <th id="${key}"></th>
         <th></th>
         <th></th>
         <th></th>
