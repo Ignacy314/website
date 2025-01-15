@@ -144,7 +144,7 @@
         <th></th>
         <th>${key}</th>
         <th>${new Date().toLocaleTimeString()}</th>
-        <th id="${key}"></th>
+        <th id="${key}">00:00:00</th>
         <th></th>
         <th></th>
         <th></th>
@@ -313,7 +313,7 @@
           <th>${ip}</th>
           <th>${mac}</th>
           <th>${new Date().toLocaleTimeString()}</th>
-          <th id="${mac}"></th>
+          <th id="${mac}">00:00:00</th>
           <th>${statuses.free}</th>
           <th>${statuses.gps}</th>
           <th>${statuses.imu}</th>
