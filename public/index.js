@@ -44,7 +44,7 @@
         this.value += this.delay;
       }
       //this.display.innerHTML = "<div>" + this.formatTime(this.value) + "</div>";
-      if (this.value > 5000) {
+      if (this.value >= 7000) {
         this.display.innerHTML = "<div style='color: red'>" + this.formatTime(this.value) + "</div>";
         //this.display.style.color = "#FF0000"
       } else {
