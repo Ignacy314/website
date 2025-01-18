@@ -117,20 +117,61 @@
   //  }
   //}
 
-  function dial() {
-    console.log(location.host)
-    const conn = new WebSocket(`ws://${location.host}/andros/subscribe`)
+  function reset() {
+    status_table.innerHTML = `
+      <tr>
+        <th>Local IP</th>
+        <th>MAC</th>
+        <th>UPDATED</th>
+        <th>SINCE</th>
+        <th>FREE GB</th>
+        <th>GPS</th>
+        <th>IMU</th>
+        <th>AHT</th>
+        <th>WIND</th>
+        <th>BMP</th>
+        <th>INA</th>
+        <th>I2S</th>
+        <th>UMC</th>
+      </tr>
+    `
 
-    conn.addEventListener('close', ev => {
-      console.log(`WebSocket Disconnected code: ${ev.code}, reason: ${ev.reason}`, true)
-      if (ev.code !== 1001) {
-        console.log('Reconnecting in 1s', true)
-        setTimeout(dial, 1000)
-      }
-    })
-    conn.addEventListener('open', ev => {
-      console.info('websocket connected')
-    })
+    data_table.innerHTML = `
+      <tr>
+        <th colspan="1" rowspan="2" scope="colgroup">Local IP</th>
+        <th colspan="1" rowspan="2" scope="colgroup">MAC</th>
+        <th colspan="2" scope="colgroup">GPS</th>
+        <th colspan="1" scope="colgroup">IMU</th>
+        <th colspan="2" scope="colgroup">AHT</th>
+        <th colspan="2" scope="colgroup">WIND</th>
+        <th colspan="1" scope="colgroup">BMP</th>
+        <th colspan="2" scope="colgroup">INA</th>
+      </tr>
+      <tr>
+        <th scope="col">LONG</th>
+        <th scope="col">LAT</th>
+        <th scope="col">HEADING</th>
+        <th scope="col">HUMID</th>
+        <th scope="col">TEMP</th>
+        <th scope="col">DIR</th>
+        <th scope="col">SPEED</th>
+        <th scope="col">hPa</th>
+        <th scope="col">mV</th>
+        <th scope="col">mA</th>
+      </tr>
+    `
+    map = {
+      '85:ce': null,
+      '86:04': null,
+      '84:f3': null,
+      '86:7f': null,
+      '85:fe': null,
+      '85:e6': null,
+      '86:55': null,
+      '86:28': null,
+      '75:fa': null,
+      '86:67': null,
+    }
 
     Object.keys(map).forEach(function(key) {
       var status_tr = status_table.insertRow(-1)
@@ -173,6 +214,25 @@
       map[key].stopwatch = new Stopwatch(key)
       map[key].stopwatch.start()
     })
+  }
+
+  function dial() {
+    console.log(location.host)
+    const conn = new WebSocket(`ws://${location.host}/andros/subscribe`)
+
+    conn.addEventListener('close', ev => {
+      console.log(`WebSocket Disconnected code: ${ev.code}, reason: ${ev.reason}`, true)
+      if (ev.code !== 1001) {
+        console.log('Reconnecting in 1s', true)
+        setTimeout(dial, 1000)
+      }
+    })
+    conn.addEventListener('open', ev => {
+      reset()
+      console.info('websocket connected')
+    })
+
+    reset()
 
     //map = {}
     // This is where we handle messages received.
