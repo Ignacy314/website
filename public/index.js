@@ -7,16 +7,16 @@
   var ips
   var n
   var map = {
-    '85:ce': null,
-    '86:46': null,
-    '84:f3': null,
-    '86:7f': null,
-    '85:fe': null,
-    '85:e6': null,
-    '86:55': null,
-    '86:28': null,
-    '75:fa': null,
-    '86:67': null,
+    //'85:ce': null,
+    //'86:46': null,
+    //'84:f3': null,
+    //'86:7f': null,
+    //'85:fe': null,
+    //'85:e6': null,
+    //'86:55': null,
+    //'86:28': null,
+    //'75:fa': null,
+    //'86:67': null,
   }
 
   class Stopwatch {
@@ -162,7 +162,7 @@
     `
     map = {
       '85:ce': null,
-      '86:04': null,
+      '86:46': null,
       '84:f3': null,
       '86:7f': null,
       '85:fe': null,
