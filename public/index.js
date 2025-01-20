@@ -384,17 +384,47 @@
           <th>${statuses.i2s}</th>
           <th>${statuses.umc}</th>
         `
+        try {
+          long = Number((data.gps.longitude).toFixed(7))
+        } catch (error) {
+          long = "undefined"
+        }
+        try {
+          lat = Number((data.gps.latitude).toFixed(7))
+        } catch (error) {
+          lat = "undefined"
+        }
+        try {
+          angle = Number((data.imu.angle).toFixed(7))
+        } catch (error) {
+          angle = "undefined"
+        }
+        try {
+          hum = Number((data.aht.humidity).toFixed(7))
+        } catch (error) {
+          hum = "undefined"
+        }
+        try {
+          temp = Number((data.aht.temperature).toFixed(7))
+        } catch (error) {
+          temp = "undefined"
+        }
+        try {
+          press = Number((data.bmp.pressure).toFixed(7))
+        } catch (error) {
+          temp = "undefined"
+        }
         data_tr.innerHTML = `
           <th scope="col">${ip}</th>
           <th scope="col">${mac}</th>
-          <th scope="col">${data.gps.longitude}</th>
-          <th scope="col">${data.gps.latitude}</th>
-          <th scope="col">${data.imu.angle}</th>
-          <th scope="col">${data.aht.humidity}</th>
-          <th scope="col">${data.aht.temperature}</th>
+          <th scope="col">${long}</th>
+          <th scope="col">${lat}</th>
+          <th scope="col">${angle}</th>
+          <th scope="col">${hum}</th>
+          <th scope="col">${temp}</th>
           <th scope="col">${data.wind.dir}</th>
           <th scope="col">${data.wind.speed}</th>
-          <th scope="col">${data.bmp.pressure}</th>
+          <th scope="col">${press}</th>
           <th scope="col">${data.ina.bus_voltage}</th>
           <th scope="col">${data.ina.power}</th>
         `
