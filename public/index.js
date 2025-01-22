@@ -1,12 +1,10 @@
 ;(() => {
-  //const ips = ["192.168.2.104"]
-  //const n = ips.length
   const status_table = document.getElementById('status')
   const data_table = document.getElementById('data')
 
   var ips
   var n
-  var map = {
+  var modules = {
     //'85:ce': null,
     //'86:46': null,
     //'84:f3': null,
@@ -79,44 +77,6 @@
     }
   }
 
-
-  //function sortTable(table) {
-  //  var table, rows, switching, i, x, y, shouldSwitch;
-  //  table = document.getElementById(table);
-  //  switching = true;
-  //  /* Make a loop that will continue until
-  //  no switching has been done: */
-  //  while (switching) {
-  //    // Start by saying: no switching is done:
-  //    switching = false;
-  //    rows = table.rows;
-  //    /* Loop through all table rows (except the
-  //    first, which contains table headers): */
-  //    for (i = 1; i < (rows.length - 1); i++) {
-  //      // Start by saying there should be no switching:
-  //      shouldSwitch = false;
-  //      /* Get the two elements you want to compare,
-  //      one from current row and one from the next: */
-  //      x = rows[i].getElementsByTagName("th")[0].innerHTML.split(".");
-  //      x = parseInt([x.length - 1])
-  //      y = rows[i + 1].getElementsByTagName("th")[0].innerHTML;
-  //      y = parseInt([y.length - 1])
-  //      // Check if the two rows should switch place:
-  //      if (x > y) {
-  //        // If so, mark as a switch and break the loop:
-  //        shouldSwitch = true;
-  //        break;
-  //      }
-  //    }
-  //    if (shouldSwitch) {
-  //      /* If a switch has been marked, make the switch
-  //      and mark that a switch has been done: */
-  //      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-  //      switching = true;
-  //    }
-  //  }
-  //}
-
   function reset() {
     status_table.innerHTML = `
       <tr>
@@ -160,7 +120,7 @@
         <th scope="col">mA</th>
       </tr>
     `
-    map = {
+    modules = {
       '85:ce': null,
       '86:46': null,
       '84:f3': null,
@@ -173,13 +133,20 @@
       '86:67': null,
     }
 
-    Object.keys(map).forEach(function(key) {
+    Object.keys(modules).forEach(function(key, i) {
       var status_tr = status_table.insertRow(-1)
       var data_tr = data_table.insertRow(-1)
-      map[key] = {
+      const okIcon = icon((i+4).toString(), markerStyleGreen)
+      const noDataIcon = icon((i+4).toString(), markerStyleBlue)
+      modules[key] = {
         data: data_tr,
         status: status_tr,
-        stopwatch: null
+        stopwatch: null,
+        //marker: L.marker([52.40997, 16.93180 + (i / 10000)]).addTo(map).setIcon(noDataIcon).bindPopup(key),
+        marker: null,
+        okIcon: okIcon,
+        noDataIcon: noDataIcon,
+        droneIcon: null,
       }
       status_tr.innerHTML = `
         <th></th>
@@ -211,8 +178,8 @@
         <th scope="col"></th>
       `
 
-      map[key].stopwatch = new Stopwatch(key)
-      map[key].stopwatch.start()
+      modules[key].stopwatch = new Stopwatch(key)
+      modules[key].stopwatch.start()
     })
   }
 
@@ -234,7 +201,6 @@
 
     reset()
 
-    //map = {}
     // This is where we handle messages received.
     conn.addEventListener('message', ev => {
       if (typeof ev.data !== 'string') {
@@ -325,12 +291,9 @@
         //  `
         //}
       } else {
-        //console.log(ev.data)
-        //console.log(map)
         const s = ev.data.split(" ")
         const ip = s[0]
         const mac = s[1].slice(0, -1)
-        //console.log(mac)
         const data_json = JSON.parse(s[2])
         const statuses = data_json.statuses
         const data = data_json.data
@@ -346,29 +309,22 @@
           }
         })
 
-        //console.log(map)
         var status_tr
         var data_tr
-        //console.log(mac)
-        //console.log(typeof(mac))
-        //console.log(map[mac])
-        if (mac in map && map[mac] != null) {
-          const trs = map[mac]
+        if (mac in modules && modules[mac] != null) {
+          const trs = modules[mac]
           status_tr = trs.status
           data_tr = trs.data
           trs.stopwatch = null
         } else {
           status_tr = status_table.insertRow(-1)
           data_tr = data_table.insertRow(-1)
-          map[mac] = {
+          modules[mac] = {
             data: data_tr,
             status: status_tr,
             stopwatch: null
           }
         }
-        //const trs = map[ip]
-        //const status_tr = trs.status
-        //const data_tr = trs.data
         status_tr.innerHTML = `
           <th>${ip}</th>
           <th>${mac}</th>
@@ -384,15 +340,18 @@
           <th>${statuses.i2s}</th>
           <th>${statuses.umc}</th>
         `
+        var hasNewGps = true
         try {
           long = Number((data.gps.longitude).toFixed(7))
         } catch (error) {
           long = "undefined"
+          hasNewGps = false
         }
         try {
           lat = Number((data.gps.latitude).toFixed(7))
         } catch (error) {
           lat = "undefined"
+          hasNewGps = false
         }
         try {
           angle = Number((data.imu.angle).toFixed(7))
@@ -429,50 +388,102 @@
           <th scope="col">${data.ina.power}</th>
         `
 
-        map[mac].stopwatch = new Stopwatch(mac)
-        map[mac].stopwatch.start()
-        //sortTable("status")
-        //sortTable("data")
+        if (hasNewGps) {
+          if (modules[mac].marker == null) {
+            modules[mac].marker = L.marker([lat, long]).addTo(map).setIcon(modules[mac].okIcon).bindPopup(mac)
+          } else {
+            modules[mac].marker.setLatLng(L.latLng(lat, long))
+            modules[mac].marker.setIcon(modules[mac].okIcon)
+          }
+        } else if (modules[mac].marker != null) {
+          modules[mac].marker.setIcon(modules[mac].noDataIcon)
+        }
+
+        // TODO: if drone detected change marker icon
+
+        modules[mac].stopwatch = new Stopwatch(mac)
+        modules[mac].stopwatch.start()
       }
     })
   }
-  dial()
 
-  //// appendLog appends the passed text to messageLog.
-  //function appendLog(text, error) {
-  //  const p = document.createElement('p')
-  //  // Adding a timestamp to each message makes the log easier to read.
-  //  p.innerText = `${new Date().toLocaleTimeString()}: ${text}`
-  //  if (error) {
-  //    p.style.color = 'red'
-  //    p.style.fontStyle = 'bold'
-  //  }
-  //  messageLog.append(p)
-  //  return p
-  //}
-  //appendLog('Submit a message to get started!')
-  //
-  //// onsubmit publishes the message from the user when the form is submitted.
-  //publishForm.onsubmit = async ev => {
-  //  ev.preventDefault()
-  //
-  //  const msg = messageInput.value
-  //  if (msg === '') {
-  //    return
-  //  }
-  //  messageInput.value = ''
-  //
-  //  expectingMessage = true
-  //  try {
-  //    const resp = await fetch('/publish', {
-  //      method: 'POST',
-  //      body: msg,
-  //    })
-  //    if (resp.status !== 202) {
-  //      throw new Error(`Unexpected HTTP Status ${resp.status} ${resp.statusText}`)
-  //    }
-  //  } catch (err) {
-  //    appendLog(`Publish failed: ${err.message}`, true)
-  //  }
-  //}
+  const green = '#65d817'
+  const markerStyleGreen = `
+    background-color: ${green};
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
+    left: -0.75rem;
+    top: -0.75rem;
+    position: relative;
+    border-radius: 1.5rem 1.5rem 0;
+    transform: rotate(45deg);
+    border: 1px solid #FFFFFF
+  `
+
+  const blue = '#2f54ce'
+  const markerStyleBlue = `
+    background-color: ${blue};
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
+    left: -0.75rem;
+    top: -0.75rem;
+    position: relative;
+    border-radius: 1.5rem 1.5rem 0;
+    transform: rotate(45deg);
+    border: 1px solid #FFFFFF
+  `
+
+  const labelStyles=[
+  `
+    transform: rotate(-45deg);
+    display: block;
+    position: relative;
+    left: 0.29rem;
+    top: -0.40rem;
+    font-size: 1rem
+  `,
+  `
+    transform: rotate(-45deg);
+    display: block;
+    position: relative;
+    left: 0.10rem;
+    top: -0.15rem;
+    font-size: 1rem
+  `,
+  ]
+
+  function icon(label, markerStyle) {
+    const index = label.length - 1
+    return L.divIcon({
+      className: `${label}Icon`,
+      iconAnchor: [0, 24],
+      labelAnchor: [0, 0],
+      popupAnchor: [0, -36],
+      html: `<span style="${markerStyle}" />  <div style="${labelStyles[index]}">${label}</div>`
+    })
+  }
+
+  const map = L.map('map').setView([52.40826, 16.93358], 13);
+
+  const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  function centerModules() {
+    var arr = [];
+    for (let m in modules) {
+      if (modules[m].marker != null) {
+        arr.push(modules[m].marker)
+      }
+    }
+    var group = new L.featureGroup(arr);
+    map.fitBounds(group.getBounds().pad(0.25));
+  }
+
+  document.getElementById("centerButton").onclick = centerModules
+
+  dial()
 })()

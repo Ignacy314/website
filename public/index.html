@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ANDROS status</title>
   <link href="index.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 
 <body>
@@ -51,6 +55,8 @@
       <th scope="col">mA</th>
     </tr>
   </table>
+  <button id="centerButton" type="button">Center modules</button>
+  <div id="map" style="width: 600px; height: 400px;"></div>
   <script type="text/javascript" src="index.js"></script>
 </body>
 
