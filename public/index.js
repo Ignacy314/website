@@ -23,6 +23,7 @@
       this.delay = delay;
       this.display = document.getElementById(id);
       this.value = 0;
+      this.started = null;
     }
 
     formatTime(ms) {
@@ -39,7 +40,8 @@
 
     update() {
       if (this.state=="running") {
-        this.value += this.delay;
+        //this.value += this.delay;
+        this.value = new Date() - this.started
       }
       //this.display.innerHTML = "<div>" + this.formatTime(this.value) + "</div>";
       if (this.value >= 7000) {
@@ -53,6 +55,7 @@
     start() {
       if (this.state=="paused") {
         this.state="running";
+        this.started = new Date();
         if (!this.interval) {
           var t=this;
           this.interval = setInterval(function(){t.update();}, this.delay);
