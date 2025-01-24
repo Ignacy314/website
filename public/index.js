@@ -469,6 +469,7 @@
   }
 
   const map = L.map('map').setView([52.40826, 16.93358], 13);
+  map.gestureHandling.enable()
 
   const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
