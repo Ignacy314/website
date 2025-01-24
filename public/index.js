@@ -330,7 +330,6 @@
             stopwatch: null
           }
         }
-        console.log(statuses)
         status_tr.innerHTML = `
           <th>${ip}</th>
           <th>${mac}</th>
