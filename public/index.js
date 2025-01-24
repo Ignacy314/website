@@ -96,6 +96,7 @@
         <th>INA</th>
         <th>I2S</th>
         <th>UMC</th>
+        <th>WRITE</th>
       </tr>
     `
 
@@ -156,6 +157,7 @@
         <th>${key}</th>
         <th>${new Date().toLocaleTimeString()}</th>
         <th id="${key}">00:00:00</th>
+        <th></th>
         <th></th>
         <th></th>
         <th></th>
@@ -342,6 +344,7 @@
           <th>${statuses.ina}</th>
           <th>${statuses.i2s}</th>
           <th>${statuses.umc}</th>
+          <th>${statuses.writing}</th>
         `
         var hasNewGps = true
         try {
