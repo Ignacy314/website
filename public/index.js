@@ -383,7 +383,7 @@
         try {
           press = Number((data.bmp.pressure).toFixed(7))
         } catch (error) {
-          temp = "undefined"
+          press = "undefined"
         }
         data_tr.innerHTML = `
           <th scope="col">${ip}</th>
