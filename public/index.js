@@ -387,7 +387,13 @@
         } catch (error) {
           press = "undefined"
         }
-        console.log(data.ina.charge)
+        if (typeof data.ina.charge === 'string' || data.ina.charge instanceof String) {
+          charge = data.ina.charge
+        } else if 'Charging' in data.ina.charge {
+          charge = "Charging: " + data.ina.charge['Charging'] + "%"
+        } else {
+          charge = "Discharging: " + data.ina.charge['Discharging'] + "%"
+        }
         data_tr.innerHTML = `
           <th scope="col">${ip}</th>
           <th scope="col">${mac}</th>
@@ -401,7 +407,7 @@
           <th scope="col">${press}</th>
           <th scope="col">${data.ina.bus_voltage}</th>
           <th scope="col">${data.ina.power}</th>
-          <th scope="col">${data.ina.charge}</th>
+          <th scope="col">${charge}</th>
         `
 
         if (hasNewGps) {
