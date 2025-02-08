@@ -111,7 +111,7 @@
         <th colspan="2" scope="colgroup">AHT</th>
         <th colspan="2" scope="colgroup">WIND</th>
         <th colspan="1" scope="colgroup">BMP</th>
-        <th colspan="2" scope="colgroup">INA</th>
+        <th colspan="3" scope="colgroup">INA</th>
       </tr>
       <tr>
         <th scope="col">LONG</th>
@@ -124,6 +124,7 @@
         <th scope="col">hPa</th>
         <th scope="col">mV</th>
         <th scope="col">mA</th>
+        <th scope="col">CHARGE</th>
       </tr>
     `
     modules = {
@@ -175,6 +176,7 @@
       data_tr.innerHTML = `
         <th scope="col"></th>
         <th scope="col">${key}</th>
+        <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
@@ -398,6 +400,7 @@
           <th scope="col">${press}</th>
           <th scope="col">${data.ina.bus_voltage}</th>
           <th scope="col">${data.ina.power}</th>
+          <th scope="col">${data.ina.charge}</th>
         `
 
         if (hasNewGps) {
