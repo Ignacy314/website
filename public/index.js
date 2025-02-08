@@ -389,7 +389,7 @@
         }
         if (typeof data.ina.charge === 'string' || data.ina.charge instanceof String) {
           charge = data.ina.charge
-        } else if 'Charging' in data.ina.charge {
+        } else if ('Charging' in data.ina.charge) {
           charge = "Charging: " + data.ina.charge['Charging'] + "%"
         } else {
           charge = "Discharging: " + data.ina.charge['Discharging'] + "%"
