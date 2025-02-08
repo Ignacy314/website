@@ -387,7 +387,7 @@
         } catch (error) {
           press = "undefined"
         }
-        if (data.ina != null) {
+        try {
           if (typeof data.ina.charge === 'string' || data.ina.charge instanceof String) {
             charge = data.ina.charge
           } else if ('Charging' in data.ina.charge) {
@@ -395,6 +395,8 @@
           } else {
             charge = "Discharging: " + data.ina.charge['Discharging'] + "%"
           }
+        } catch {
+          charge = "undefined"
         }
         data_tr.innerHTML = `
           <th scope="col">${ip}</th>
