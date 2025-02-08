@@ -387,12 +387,14 @@
         } catch (error) {
           press = "undefined"
         }
-        if (typeof data.ina.charge === 'string' || data.ina.charge instanceof String) {
-          charge = data.ina.charge
-        } else if ('Charging' in data.ina.charge) {
-          charge = "Charging: " + data.ina.charge['Charging'] + "%"
-        } else {
-          charge = "Discharging: " + data.ina.charge['Discharging'] + "%"
+        if data.ina != null {
+          if (typeof data.ina.charge === 'string' || data.ina.charge instanceof String) {
+            charge = data.ina.charge
+          } else if ('Charging' in data.ina.charge) {
+            charge = "Charging: " + data.ina.charge['Charging'] + "%"
+          } else {
+            charge = "Discharging: " + data.ina.charge['Discharging'] + "%"
+          }
         }
         data_tr.innerHTML = `
           <th scope="col">${ip}</th>
