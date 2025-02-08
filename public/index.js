@@ -387,7 +387,7 @@
         } catch (error) {
           press = "undefined"
         }
-        if data.ina != null {
+        if (data.ina != null) {
           if (typeof data.ina.charge === 'string' || data.ina.charge instanceof String) {
             charge = data.ina.charge
           } else if ('Charging' in data.ina.charge) {
