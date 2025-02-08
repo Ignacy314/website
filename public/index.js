@@ -387,6 +387,7 @@
         } catch (error) {
           press = "undefined"
         }
+        console.log(data.ina.charge)
         data_tr.innerHTML = `
           <th scope="col">${ip}</th>
           <th scope="col">${mac}</th>
