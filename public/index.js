@@ -87,7 +87,9 @@
         <th>MAC</th>
         <th>UPDATED</th>
         <th>SINCE</th>
-        <th>FREE GB</th>
+        <th>FREE[GB]</th>
+        <th>CPU[%]</th>
+        <th>TEMP[C]</th>
         <th>GPS</th>
         <th>IMU</th>
         <th>AHT</th>
@@ -160,6 +162,8 @@
         <th>${key}</th>
         <th>${new Date().toLocaleTimeString()}</th>
         <th id="${key}">00:00:00</th>
+        <th></th>
+        <th></th>
         <th></th>
         <th></th>
         <th></th>
@@ -342,6 +346,8 @@
           <th>${new Date().toLocaleTimeString()}</th>
           <th id="${mac}">00:00:00</th>
           <th>${statuses.free}</th>
+          <th>${statuses.cpu_usage}</th>
+          <th>${statuses.temp}</th>
           <th>${statuses.gps}</th>
           <th>${statuses.imu}</th>
           <th>${statuses.aht}</th>
