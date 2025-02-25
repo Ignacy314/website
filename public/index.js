@@ -101,6 +101,7 @@
         <th>MAX I2S</th>
         <th>MAX UMC</th>
         <th>WRITE</th>
+        <th>DRONE</th>
       </tr>
     `
 
@@ -163,6 +164,7 @@
         <th>${key}</th>
         <th>${new Date().toLocaleTimeString()}</th>
         <th id="${key}">00:00:00</th>
+        <th></th>
         <th></th>
         <th></th>
         <th></th>
@@ -341,6 +343,16 @@
             stopwatch: null
           }
         }
+
+        var drone
+        if (statuses.drone_detected) {
+          var lat = Number((statuses.drone_coords.lat).toFixed(7))
+          var lon = Number((statuses.drone_coords.lon).toFixed(7))
+          drone = lon.toString() + ", " + lat.toString()
+        } else {
+          drone = "None"
+        }
+
         status_tr.innerHTML = `
           <th>${ip}</th>
           <th>${mac}</th>
@@ -360,6 +372,7 @@
           <th>${statuses.max_i2s}</th>
           <th>${statuses.max_umc}</th>
           <th>${statuses.writing}</th>
+          <th>${drone}</th>
         `
         var hasNewGps = true
         try {
