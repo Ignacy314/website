@@ -311,7 +311,8 @@
       } else {
         const s = ev.data.split(" ")
         const ip = s[0]
-        const mac = s[1].slice(0, -1)
+        const mac = s[1].slice(-6, -1)
+
         const data_json = JSON.parse(s[2])
         const statuses = data_json.statuses
         const data = data_json.data
