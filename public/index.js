@@ -347,8 +347,8 @@
         var drone
         if (statuses.drone_detected) {
           console.log(statuses)
-          var lat = Number((statuses.drone_lat).toFixed(7))
-          var lon = Number((statuses.drone_lon).toFixed(7))
+          var lat = Number((statuses.drone_coords.lat).toFixed(7))
+          var lon = Number((statuses.drone_coords.lon).toFixed(7))
           drone = lon.toString() + ", " + lat.toString()
         } else {
           drone = "None"
