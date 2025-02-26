@@ -314,6 +314,7 @@
         const mac = s[1].slice(-6, -1)
 
         const data_json = JSON.parse(s[2])
+        console.log(data_json)
         const statuses = data_json.statuses
         const data = data_json.data
 
