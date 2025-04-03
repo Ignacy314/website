@@ -1,9 +1,9 @@
-;(() => {
-  const status_table = document.getElementById('status')
-  const data_table = document.getElementById('data')
+(() => {
+  const status_table = document.getElementById("status");
+  const data_table = document.getElementById("data");
 
-  var ips
-  var n
+  var ips;
+  var n;
   var modules = {
     //'85:ce': null,
     //'86:46': null,
@@ -15,10 +15,11 @@
     //'86:28': null,
     //'75:fa': null,
     //'86:67': null,
-  }
+  };
 
   class Stopwatch {
-    constructor(id, delay=1000) { //Delay in ms
+    constructor(id, delay = 1000) {
+      //Delay in ms
       this.state = "paused";
       this.delay = delay;
       this.display = document.getElementById(id);
@@ -27,45 +28,57 @@
     }
 
     formatTime(ms) {
-      var hours   = Math.floor(ms / 3600000);
-      var minutes = Math.floor((ms - (hours * 3600000)) / 60000);
-      var seconds = Math.floor((ms - (hours * 3600000) - (minutes * 60000)) / 1000);
-      var ds = Math.floor((ms - (hours * 3600000) - (minutes * 60000) - (seconds * 1000))/100);
-      if (hours   < 10) {hours   = "0"+hours;}
-      if (minutes < 10) {minutes = "0"+minutes;}
-      if (seconds < 10) {seconds = "0"+seconds;}
+      var hours = Math.floor(ms / 3600000);
+      var minutes = Math.floor((ms - hours * 3600000) / 60000);
+      var seconds = Math.floor((ms - hours * 3600000 - minutes * 60000) / 1000);
+      var ds = Math.floor(
+        (ms - hours * 3600000 - minutes * 60000 - seconds * 1000) / 100,
+      );
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
       //return hours+':'+minutes+':'+seconds+'.'+ds;
-      return hours+':'+minutes+':'+seconds;
+      return hours + ":" + minutes + ":" + seconds;
     }
 
     update() {
-      if (this.state=="running") {
+      if (this.state == "running") {
         //this.value += this.delay;
-        this.value = new Date() - this.started
+        this.value = new Date() - this.started;
       }
       //this.display.innerHTML = "<div>" + this.formatTime(this.value) + "</div>";
       if (this.value >= 7000) {
-        this.display.innerHTML = "<div style='color: red'>" + this.formatTime(this.value) + "</div>";
+        this.display.innerHTML =
+          "<div style='color: red'>" + this.formatTime(this.value) + "</div>";
         //this.display.style.color = "#FF0000"
       } else {
-        this.display.innerHTML = "<div>" + this.formatTime(this.value) + "</div>";
+        this.display.innerHTML =
+          "<div>" + this.formatTime(this.value) + "</div>";
       }
     }
 
     start() {
-      if (this.state=="paused") {
-        this.state="running";
+      if (this.state == "paused") {
+        this.state = "running";
         this.started = new Date();
         if (!this.interval) {
-          var t=this;
-          this.interval = setInterval(function(){t.update();}, this.delay);
+          var t = this;
+          this.interval = setInterval(function () {
+            t.update();
+          }, this.delay);
         }
       }
     }
 
     stop() {
-      if (this.state=="running") {
-        this.state="paused";
+      if (this.state == "running") {
+        this.state = "paused";
         if (this.interval) {
           clearInterval(this.interval);
           this.interval = null;
@@ -75,7 +88,7 @@
 
     reset() {
       this.stop();
-      this.value=0;
+      this.value = 0;
       this.update();
     }
   }
@@ -103,7 +116,7 @@
         <th>WRITE</th>
         <th>DRONE</th>
       </tr>
-    `
+    `;
 
     data_table.innerHTML = `
       <tr>
@@ -129,26 +142,27 @@
         <th scope="col">mA</th>
         <th scope="col">CHARGE</th>
       </tr>
-    `
+    `;
     modules = {
-      '85:ce': null,
-      '86:46': null,
-      '84:f3': null,
-      '86:7f': null,
-      '85:fe': null,
-      '85:e6': null,
-      '86:55': null,
-      '86:28': null,
-      '75:fa': null,
-      '85:c8': null,
+      "85:ce": null,
+      "86:46": null,
+      "84:f3": null,
+      "86:7f": null,
+      "85:fe": null,
+      "85:e6": null,
+      "86:55": null,
+      "86:28": null,
+      "75:fa": null,
+      "85:c8": null,
       //'86:67': null,
-    }
+    };
 
-    Object.keys(modules).forEach(function(key, i) {
-      var status_tr = status_table.insertRow(-1)
-      var data_tr = data_table.insertRow(-1)
-      const okIcon = icon((i+4).toString(), markerStyleGreen)
-      const noDataIcon = icon((i+4).toString(), markerStyleBlue)
+    Object.keys(modules).forEach(function (key, i) {
+      var status_tr = status_table.insertRow(-1);
+      var data_tr = data_table.insertRow(-1);
+      const okIcon = icon((i + 4).toString(), markerStyleGreen);
+      const noDataIcon = icon((i + 4).toString(), markerStyleBlue);
+      const droneIcon = icon((i + 4).toString(), markerStyleRed);
       modules[key] = {
         data: data_tr,
         status: status_tr,
@@ -157,8 +171,8 @@
         marker: null,
         okIcon: okIcon,
         noDataIcon: noDataIcon,
-        droneIcon: null,
-      }
+        droneIcon: droneIcon,
+      };
       status_tr.innerHTML = `
         <th></th>
         <th>${key}</th>
@@ -179,7 +193,7 @@
         <th></th>
         <th></th>
         <th></th>
-      `
+      `;
       data_tr.innerHTML = `
         <th scope="col"></th>
         <th scope="col">${key}</th>
@@ -194,36 +208,39 @@
         <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
-      `
+      `;
 
-      modules[key].stopwatch = new Stopwatch(key)
-      modules[key].stopwatch.start()
-    })
+      modules[key].stopwatch = new Stopwatch(key);
+      modules[key].stopwatch.start();
+    });
   }
 
   function dial() {
-    console.log(location.host)
-    const conn = new WebSocket(`ws://${location.host}/andros/subscribe`)
+    console.log(location.host);
+    const conn = new WebSocket(`ws://${location.host}/andros/subscribe`);
 
-    conn.addEventListener('close', ev => {
-      console.log(`WebSocket Disconnected code: ${ev.code}, reason: ${ev.reason}`, true)
+    conn.addEventListener("close", (ev) => {
+      console.log(
+        `WebSocket Disconnected code: ${ev.code}, reason: ${ev.reason}`,
+        true,
+      );
       if (ev.code !== 1001) {
-        console.log('Reconnecting in 1s', true)
-        setTimeout(dial, 1000)
+        console.log("Reconnecting in 1s", true);
+        setTimeout(dial, 1000);
       }
-    })
-    conn.addEventListener('open', ev => {
-      reset()
-      console.info('websocket connected')
-    })
+    });
+    conn.addEventListener("open", (ev) => {
+      reset();
+      console.info("websocket connected");
+    });
 
-    reset()
+    reset();
 
     // This is where we handle messages received.
-    conn.addEventListener('message', ev => {
-      if (typeof ev.data !== 'string') {
-        console.error('unexpected message type', typeof ev.data)
-        return
+    conn.addEventListener("message", (ev) => {
+      if (typeof ev.data !== "string") {
+        console.error("unexpected message type", typeof ev.data);
+        return;
       }
       if (ev.data.startsWith("ips")) {
         //console.log(ev.data)
@@ -309,50 +326,51 @@
         //  `
         //}
       } else {
-        const s = ev.data.split(" ")
-        const ip = s[0]
-        const mac = s[1].slice(-6, -1)
+        const s = ev.data.split(" ");
+        const ip = s[0];
+        const mac = s[1].slice(-6, -1);
 
-        const data_json = JSON.parse(s[2])
-        console.log(data_json)
-        const statuses = data_json.statuses
-        const data = data_json.data
+        const data_json = JSON.parse(s[2]);
+        console.log(data_json);
+        const statuses = data_json.statuses;
+        const data = data_json.data;
 
-        Object.keys(statuses).forEach(function(key) {
-          if(statuses[key] === null) {
-            statuses[key] = 'None';
+        Object.keys(statuses).forEach(function (key) {
+          if (statuses[key] === null) {
+            statuses[key] = "None";
           }
-        })
-        Object.keys(data).forEach(function(key) {
-          if(data[key] === null) {
-            data[key] = 'None';
+        });
+        Object.keys(data).forEach(function (key) {
+          if (data[key] === null) {
+            data[key] = "None";
           }
-        })
+        });
 
-        var status_tr
-        var data_tr
+        var status_tr;
+        var data_tr;
         if (mac in modules && modules[mac] != null) {
-          const trs = modules[mac]
-          status_tr = trs.status
-          data_tr = trs.data
-          trs.stopwatch = null
+          const trs = modules[mac];
+          status_tr = trs.status;
+          data_tr = trs.data;
+          trs.stopwatch = null;
         } else {
-          status_tr = status_table.insertRow(-1)
-          data_tr = data_table.insertRow(-1)
+          status_tr = status_table.insertRow(-1);
+          data_tr = data_table.insertRow(-1);
           modules[mac] = {
             data: data_tr,
             status: status_tr,
-            stopwatch: null
-          }
+            stopwatch: null,
+          };
         }
 
-        var drone
+        var drone;
         if (statuses.drone_detected) {
-          var lat = Number((statuses.drone_coords.lat).toFixed(7))
-          var lon = Number((statuses.drone_coords.lon).toFixed(7))
-          drone = lon.toString() + ", " + lat.toString()
+          // var lat = Number((statuses.drone_coords.lat).toFixed(7))
+          // var lon = Number((statuses.drone_coords.lon).toFixed(7))
+          // drone = lon.toString() + ", " + lat.toString()
+          drone = "Yes";
         } else {
-          drone = "None"
+          drone = "No";
         }
 
         status_tr.innerHTML = `
@@ -375,50 +393,53 @@
           <th>${statuses.max_umc}</th>
           <th>${statuses.writing}</th>
           <th>${drone}</th>
-        `
-        var hasNewGps = true
+        `;
+        var hasNewGps = true;
         try {
-          long = Number((data.gps.longitude).toFixed(7))
+          long = Number(data.gps.longitude.toFixed(7));
         } catch (error) {
-          long = "undefined"
-          hasNewGps = false
+          long = "undefined";
+          hasNewGps = false;
         }
         try {
-          lat = Number((data.gps.latitude).toFixed(7))
+          lat = Number(data.gps.latitude.toFixed(7));
         } catch (error) {
-          lat = "undefined"
-          hasNewGps = false
+          lat = "undefined";
+          hasNewGps = false;
         }
         try {
-          angle = Number((data.imu.angle).toFixed(7))
+          angle = Number(data.imu.angle.toFixed(7));
         } catch (error) {
-          angle = "undefined"
+          angle = "undefined";
         }
         try {
-          hum = Number((data.aht.humidity).toFixed(7))
+          hum = Number(data.aht.humidity.toFixed(7));
         } catch (error) {
-          hum = "undefined"
+          hum = "undefined";
         }
         try {
-          temp = Number((data.aht.temperature).toFixed(7))
+          temp = Number(data.aht.temperature.toFixed(7));
         } catch (error) {
-          temp = "undefined"
+          temp = "undefined";
         }
         try {
-          press = Number((data.bmp.pressure).toFixed(7))
+          press = Number(data.bmp.pressure.toFixed(7));
         } catch (error) {
-          press = "undefined"
+          press = "undefined";
         }
         try {
-          if (typeof data.ina.charge === 'string' || data.ina.charge instanceof String) {
-            charge = data.ina.charge
-          } else if ('Charging' in data.ina.charge) {
-            charge = "Charging: " + data.ina.charge['Charging'] + "%"
+          if (
+            typeof data.ina.charge === "string" ||
+            data.ina.charge instanceof String
+          ) {
+            charge = data.ina.charge;
+          } else if ("Charging" in data.ina.charge) {
+            charge = "Charging: " + data.ina.charge["Charging"] + "%";
           } else {
-            charge = "Discharging: " + data.ina.charge['Discharging'] + "%"
+            charge = "Discharging: " + data.ina.charge["Discharging"] + "%";
           }
         } catch {
-          charge = "undefined"
+          charge = "undefined";
         }
         data_tr.innerHTML = `
           <th scope="col">${ip}</th>
@@ -434,28 +455,35 @@
           <th scope="col">${data.ina.bus_voltage}</th>
           <th scope="col">${data.ina.power}</th>
           <th scope="col">${charge}</th>
-        `
+        `;
 
         if (hasNewGps) {
           if (modules[mac].marker == null) {
-            modules[mac].marker = L.marker([lat, long]).addTo(map).setIcon(modules[mac].okIcon).bindPopup(mac)
+            modules[mac].marker = L.marker([lat, long])
+              .addTo(map)
+              .setIcon(modules[mac].okIcon)
+              .bindPopup(mac);
           } else {
-            modules[mac].marker.setLatLng(L.latLng(lat, long))
-            modules[mac].marker.setIcon(modules[mac].okIcon)
+            modules[mac].marker.setLatLng(L.latLng(lat, long));
+            modules[mac].marker.setIcon(modules[mac].okIcon);
           }
         } else if (modules[mac].marker != null) {
-          modules[mac].marker.setIcon(modules[mac].noDataIcon)
+          modules[mac].marker.setIcon(modules[mac].noDataIcon);
         }
 
         // TODO: if drone detected change marker icon
 
-        modules[mac].stopwatch = new Stopwatch(mac)
-        modules[mac].stopwatch.start()
+        if (statuses.drone_detected) {
+          modules[mac].marker.setIcon(modules[mac].droneIcon);
+        }
+
+        modules[mac].stopwatch = new Stopwatch(mac);
+        modules[mac].stopwatch.start();
       }
-    })
+    });
   }
 
-  const green = '#65d817'
+  const green = "#65d817";
   const markerStyleGreen = `
     background-color: ${green};
     width: 1.5rem;
@@ -467,9 +495,9 @@
     border-radius: 1.5rem 1.5rem 0;
     transform: rotate(45deg);
     border: 1px solid #FFFFFF
-  `
+  `;
 
-  const blue = '#2f54ce'
+  const blue = "#2f54ce";
   const markerStyleBlue = `
     background-color: ${blue};
     width: 1.5rem;
@@ -481,10 +509,23 @@
     border-radius: 1.5rem 1.5rem 0;
     transform: rotate(45deg);
     border: 1px solid #FFFFFF
-  `
+  `;
 
-  const labelStyles=[
-  `
+  const red = "#ef3124";
+  const markerStyleRed = `
+    background-color: ${red};
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
+    left: -0.75rem;
+    top: -0.75rem;
+    position: relative;
+    border-radius: 1.5rem 1.5rem 0;
+    transform: rotate(45deg);
+    border: 1px solid #FFFFFF
+  `;
+  const labelStyles = [
+    `
     transform: rotate(-45deg);
     display: block;
     position: relative;
@@ -492,7 +533,7 @@
     top: -0.40rem;
     font-size: 1rem
   `,
-  `
+    `
     transform: rotate(-45deg);
     display: block;
     position: relative;
@@ -500,40 +541,41 @@
     top: -0.15rem;
     font-size: 1rem
   `,
-  ]
+  ];
 
   function icon(label, markerStyle) {
-    const index = label.length - 1
+    const index = label.length - 1;
     return L.divIcon({
       className: `${label}Icon`,
       iconAnchor: [0, 24],
       labelAnchor: [0, 0],
       popupAnchor: [0, -36],
-      html: `<span style="${markerStyle}" />  <div style="${labelStyles[index]}">${label}</div>`
-    })
+      html: `<span style="${markerStyle}" />  <div style="${labelStyles[index]}">${label}</div>`,
+    });
   }
 
-  const map = L.map('map').setView([52.40826, 16.93358], 13);
+  const map = L.map("map").setView([52.40826, 16.93358], 13);
   //map.gestureHandling.enable()
 
-  const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxNativeZoom: 19,
     maxZoom: 25,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(map);
 
   function centerModules() {
     var arr = [];
     for (let m in modules) {
       if (modules[m].marker != null) {
-        arr.push(modules[m].marker)
+        arr.push(modules[m].marker);
       }
     }
     var group = new L.featureGroup(arr);
     map.fitBounds(group.getBounds().pad(0.25));
   }
 
-  document.getElementById("centerButton").onclick = centerModules
+  document.getElementById("centerButton").onclick = centerModules;
 
-  dial()
-})()
+  dial();
+})();
