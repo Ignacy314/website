@@ -115,6 +115,7 @@
         <th>MAX UMC</th>
         <th>WRITE</th>
         <th>DRONE</th>
+        <th>DIST</th>
       </tr>
     `;
 
@@ -178,6 +179,7 @@
         <th>${key}</th>
         <th>${new Date().toLocaleTimeString()}</th>
         <th id="${key}">00:00:00</th>
+        <th></th>
         <th></th>
         <th></th>
         <th></th>
