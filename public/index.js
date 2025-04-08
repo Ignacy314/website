@@ -369,8 +369,10 @@
           // var lon = Number((statuses.drone_coords.lon).toFixed(7))
           // drone = lon.toString() + ", " + lat.toString()
           drone = "Yes";
+          drone_dist = statuses.drone_distance;
         } else {
           drone = "No";
+          drone_dist = " ";
         }
 
         status_tr.innerHTML = `
@@ -393,6 +395,7 @@
           <th>${statuses.max_umc}</th>
           <th>${statuses.writing}</th>
           <th>${drone}</th>
+          <th>${drone_dist}</th>
         `;
         var hasNewGps = true;
         try {
