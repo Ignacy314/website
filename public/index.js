@@ -474,13 +474,12 @@
           }
         } else if (modules[mac].marker != null) {
           modules[mac].marker.setIcon(modules[mac].noDataIcon);
+          if (statuses.drone_detected) {
+            modules[mac].marker.setIcon(modules[mac].droneIcon);
+          }
         }
 
         // TODO: if drone detected change marker icon
-
-        if (statuses.drone_detected) {
-          modules[mac].marker.setIcon(modules[mac].droneIcon);
-        }
 
         modules[mac].stopwatch = new Stopwatch(mac);
         modules[mac].stopwatch.start();
