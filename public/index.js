@@ -98,6 +98,7 @@
   var drone_marker = null;
 
   function reset() {
+    detection_timer = null;
     detection_timer = new Stopwatch("detection_timer");
     detection_timer.start();
 
@@ -254,6 +255,7 @@
       if (ev.data.startsWith("detection")) {
         console.log(ev.data);
         detection_p.innerHTML = ev.data;
+        detection_timer = null;
         detection_timer = new Stopwatch("detection_timer");
         detection_timer.start();
         detection_data = ev.data.split(",");
