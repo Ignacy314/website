@@ -251,7 +251,6 @@
         console.error("unexpected message type", typeof ev.data);
         return;
       }
-      console.log(ev.data);
       if (ev.data.startsWith("detection")) {
         console.log(ev.data);
         detection_p.innerHTML = ev.data;
