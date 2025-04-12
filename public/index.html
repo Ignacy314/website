@@ -1,68 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ANDROS status</title>
+    <link href="index.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <link
+      rel="stylesheet"
+      href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css"
+      type="text/css"
+    />
+    <script src="//unpkg.com/leaflet-gesture-handling"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ANDROS status</title>
-  <link href="index.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css"
-    type="text/css">
-  <script src="//unpkg.com/leaflet-gesture-handling"></script>
-</head>
-
-<body>
-  <table border="1" id="status">
-    <!--<tr>-->
-    <!--  <th>Local IP</th>-->
-    <!--  <th>MAC</th>-->
-    <!--  <th>UPDATED</th>-->
-    <!--  <th>SINCE</th>-->
-    <!--  <th>FREE GB</th>-->
-    <!--  <th>GPS</th>-->
-    <!--  <th>IMU</th>-->
-    <!--  <th>AHT</th>-->
-    <!--  <th>WIND</th>-->
-    <!--  <th>BMP</th>-->
-    <!--  <th>INA</th>-->
-    <!--  <th>I2S</th>-->
-    <!--  <th>UMC</th>-->
-    <!--  <th>WRITE</th>-->
-    <!--</tr>-->
-  </table>
-  <p></p>
-  <table border="1" id="data">
-    <!--<tr>-->
-    <!--  <th colspan="1" rowspan="2" scope="colgroup">Local IP</th>-->
-    <!--  <th colspan="1" rowspan="2" scope="colgroup">MAC</th>-->
-    <!--  <th colspan="2" scope="colgroup">GPS</th>-->
-    <!--  <th colspan="1" scope="colgroup">IMU</th>-->
-    <!--  <th colspan="2" scope="colgroup">AHT</th>-->
-    <!--  <th colspan="2" scope="colgroup">WIND</th>-->
-    <!--  <th colspan="1" scope="colgroup">BMP</th>-->
-    <!--  <th colspan="3" scope="colgroup">INA</th>-->
-    <!--</tr>-->
-    <!--<tr>-->
-    <!--  <th scope="col">LONG</th>-->
-    <!--  <th scope="col">LAT</th>-->
-    <!--  <th scope="col">HEADING</th>-->
-    <!--  <th scope="col">HUMID</th>-->
-    <!--  <th scope="col">TEMP</th>-->
-    <!--  <th scope="col">DIR</th>-->
-    <!--  <th scope="col">SPEED</th>-->
-    <!--  <th scope="col">hPa</th>-->
-    <!--  <th scope="col">mV</th>-->
-    <!--  <th scope="col">mA</th>-->
-    <!--  <th scope="col">CHARGE</th>-->
-    <!--</tr>-->
-  </table>
-  <button id="centerButton" type="button">Center modules</button>
-  <div id="map" style="width: 1280px; height: 960px;"></div>
-  <script type="text/javascript" src="index.js"></script>
-</body>
-
+  <body>
+    <p id="detection_timer"></p>
+    <p id="detection"></p>
+    <table border="1" id="status">
+      <!--<tr>-->
+      <!--  <th>Local IP</th>-->
+      <!--  <th>MAC</th>-->
+      <!--  <th>UPDATED</th>-->
+      <!--  <th>SINCE</th>-->
+      <!--  <th>FREE GB</th>-->
+      <!--  <th>GPS</th>-->
+      <!--  <th>IMU</th>-->
+      <!--  <th>AHT</th>-->
+      <!--  <th>WIND</th>-->
+      <!--  <th>BMP</th>-->
+      <!--  <th>INA</th>-->
+      <!--  <th>I2S</th>-->
+      <!--  <th>UMC</th>-->
+      <!--  <th>WRITE</th>-->
+      <!--</tr>-->
+    </table>
+    <p></p>
+    <table border="1" id="data">
+      <!--<tr>-->
+      <!--  <th colspan="1" rowspan="2" scope="colgroup">Local IP</th>-->
+      <!--  <th colspan="1" rowspan="2" scope="colgroup">MAC</th>-->
+      <!--  <th colspan="2" scope="colgroup">GPS</th>-->
+      <!--  <th colspan="1" scope="colgroup">IMU</th>-->
+      <!--  <th colspan="2" scope="colgroup">AHT</th>-->
+      <!--  <th colspan="2" scope="colgroup">WIND</th>-->
+      <!--  <th colspan="1" scope="colgroup">BMP</th>-->
+      <!--  <th colspan="3" scope="colgroup">INA</th>-->
+      <!--</tr>-->
+      <!--<tr>-->
+      <!--  <th scope="col">LONG</th>-->
+      <!--  <th scope="col">LAT</th>-->
+      <!--  <th scope="col">HEADING</th>-->
+      <!--  <th scope="col">HUMID</th>-->
+      <!--  <th scope="col">TEMP</th>-->
+      <!--  <th scope="col">DIR</th>-->
+      <!--  <th scope="col">SPEED</th>-->
+      <!--  <th scope="col">hPa</th>-->
+      <!--  <th scope="col">mV</th>-->
+      <!--  <th scope="col">mA</th>-->
+      <!--  <th scope="col">CHARGE</th>-->
+      <!--</tr>-->
+    </table>
+    <button id="centerButton" type="button">Center modules</button>
+    <div id="map" style="width: 1280px; height: 960px"></div>
+    <script type="text/javascript" src="index.js"></script>
+  </body>
 </html>

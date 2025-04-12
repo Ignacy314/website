@@ -1,6 +1,7 @@
 (() => {
   const status_table = document.getElementById("status");
   const data_table = document.getElementById("data");
+  const detection_p = document.getElementById("detection");
 
   var ips;
   var n;
@@ -16,6 +17,8 @@
     //'75:fa': null,
     //'86:67': null,
   };
+  var detection_timer = new Stopwatch("detection_timer");
+  detection_timer.start();
 
   class Stopwatch {
     constructor(id, delay = 1000) {
@@ -244,89 +247,15 @@
         console.error("unexpected message type", typeof ev.data);
         return;
       }
-      if (ev.data.startsWith("ips")) {
-        //console.log(ev.data)
-        //ips = ev.data.split("\n")
-        ////console.log(ips)
-        //ips = ips.slice(1, -1)
-        //n = ips.length
-        //map = {}
-        //status_table.innerHTML = `
-        //  <tr>
-        //    <th>Local IP</th>
-        //    <th>MAC</th>
-        //    <th>UPDATED</th>
-        //    <th>GPS</th>
-        //    <th>IMU</th>
-        //    <th>AHT</th>
-        //    <th>WIND</th>
-        //    <th>BMP</th>
-        //    <th>INA</th>
-        //    <th>I2S</th>
-        //    <th>UMC</th>
-        //  </tr>
-        //`
-        //data_table.innerHTML = `
-        //  <tr>
-        //    <th colspan="1" rowspan="2" scope="colgroup">Local IP</th>
-        //    <th colspan="1" rowspan="2" scope="colgroup">MAC</th>
-        //    <th colspan="2" scope="colgroup">GPS</th>
-        //    <th colspan="1" scope="colgroup">IMU</th>
-        //    <th colspan="2" scope="colgroup">AHT</th>
-        //    <th colspan="2" scope="colgroup">WIND</th>
-        //    <th colspan="1" scope="colgroup">BMP</th>
-        //    <th colspan="2" scope="colgroup">INA</th>
-        //  </tr>
-        //  <tr>
-        //    <th scope="col">LONG</th>
-        //    <th scope="col">LAT</th>
-        //    <th scope="col">HEADING</th>
-        //    <th scope="col">HUMID</th>
-        //    <th scope="col">TEMP</th>
-        //    <th scope="col">DIR</th>
-        //    <th scope="col">SPEED</th>
-        //    <th scope="col">PRESS</th>
-        //    <th scope="col">VOLT</th>
-        //    <th scope="col">POWER</th>
-        //  </tr>
-        //`
-        //for (var i = 0; i < n; i++) {
-        //  let ip = ips[i]
-        //  console.log(ip)
-        //  let status_tr = status_table.insertRow(-1)
-        //  let data_tr = data_table.insertRow(-1)
-        //  map[ip] = {
-        //    data: data_tr,
-        //    status: status_tr
-        //  }
-        //  status_tr.innerHTML = `
-        //    <th>${ip}</th>
-        //    <th></th>
-        //    <th>${new Date().toLocaleTimeString()}</th>
-        //    <th></th>
-        //    <th></th>
-        //    <th></th>
-        //    <th></th>
-        //    <th></th>
-        //    <th></th>
-        //    <th></th>
-        //    <th></th>
-        //  `
-        //  data_tr.innerHTML = `
-        //    <th scope="col">${ip}</th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //    <th scope="col"></th>
-        //  `
-        //}
+      if (ev.data.startsWith("detection")) {
+        console.log(ev.data);
+        detection_p.innerHTML = ev.data;
+        detection_timer = new Stopwatch("detection_timer");
+        detection_timer.start();
+        // detection = ev.data.split(",");
+        // lat = detection[1];
+        // lon = detection[2];
+        // alt = detection[3];
       } else {
         const s = ev.data.split(" ");
         const ip = s[0];
