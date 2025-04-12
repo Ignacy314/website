@@ -255,9 +255,10 @@
       if (ev.data.startsWith("detection")) {
         console.log(ev.data);
         detection_p.innerHTML = ev.data;
-        detection_timer = null;
-        detection_timer = new Stopwatch("detection_timer");
-        detection_timer.start();
+        detection_timer.reset();
+        // detection_timer = null;
+        // detection_timer = new Stopwatch("detection_timer");
+        // detection_timer.start();
         detection_data = ev.data.split(",");
         lat = detection_data[1];
         lon = detection_data[2];
