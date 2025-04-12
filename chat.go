@@ -41,7 +41,7 @@ type chatServer struct {
 
 	subscribersMu sync.Mutex
 	subscribers   map[*subscriber]struct{}
-	ips_msg []byte
+	ips_msg       []byte
 }
 
 func readLines(path string) ([]string, error) {
@@ -180,10 +180,10 @@ func (cs *chatServer) subscribe(w http.ResponseWriter, r *http.Request) error {
 
 	ctx := c.CloseRead(context.Background())
 
-  err = writeTimeout(ctx, time.Second*5, c, cs.ips_msg)
-  if err != nil {
-    return err
-  }
+	// err = writeTimeout(ctx, time.Second*5, c, cs.ips_msg)
+	// if err != nil {
+	//   return err
+	// }
 
 	for {
 		select {
@@ -238,7 +238,7 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 }
 
 func (cs *chatServer) MonitorFile(ip, path string) {
-  log.Printf("Monitoring file: %v%v", ip, path)
+	log.Printf("Monitoring file: %v%v", ip, path)
 	for {
 		tail := "tail -F " + path
 		ssh := "test@" + ip
