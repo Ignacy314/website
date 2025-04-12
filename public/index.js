@@ -17,8 +17,6 @@
     //'75:fa': null,
     //'86:67': null,
   };
-  var detection_timer = new Stopwatch("detection_timer");
-  detection_timer.start();
 
   class Stopwatch {
     constructor(id, delay = 1000) {
@@ -95,8 +93,13 @@
       this.update();
     }
   }
+  var detection_timer = new Stopwatch("detection_timer");
+  detection_timer.start();
 
   function reset() {
+    detection_timer = new Stopwatch("detection_timer");
+    detection_timer.start();
+
     status_table.innerHTML = `
       <tr>
         <th>Local IP</th>
