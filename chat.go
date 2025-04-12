@@ -148,6 +148,7 @@ func (cs *chatServer) publishHandler(w http.ResponseWriter, r *http.Request) {
 // It uses CloseRead to keep reading from the connection to process control
 // messages and cancel the context if the connection drops.
 func (cs *chatServer) subscribe(w http.ResponseWriter, r *http.Request) error {
+	log.Printf("new subscriber")
 	var mu sync.Mutex
 	var c *websocket.Conn
 	var closed bool
