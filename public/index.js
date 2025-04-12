@@ -95,6 +95,7 @@
   }
   var detection_timer = new Stopwatch("detection_timer");
   detection_timer.start();
+  var drone_marker = null;
 
   function reset() {
     detection_timer = new Stopwatch("detection_timer");
@@ -255,10 +256,16 @@
         detection_p.innerHTML = ev.data;
         detection_timer = new Stopwatch("detection_timer");
         detection_timer.start();
-        // detection = ev.data.split(",");
-        // lat = detection[1];
-        // lon = detection[2];
-        // alt = detection[3];
+        detection_data = ev.data.split(",");
+        lat = detection_data[1];
+        lon = detection_data[2];
+        alt = detection_data[3];
+        const droneIcon = icon("D", markerStyleRed);
+        if (drone_marker == null) {
+          drone_marker = L.marker([lat, lon]).addTo(map).setIcon(droneIcon);
+        } else {
+          drone_marker.setLatLng(L.latLng(lat, lon));
+        }
       } else {
         const s = ev.data.split(" ");
         const ip = s[0];
