@@ -269,7 +269,8 @@
         //   binaryData += String.fromCharCode(byteArray[i]);
         // }
         blobToBase64(ev.data).then((res) => {
-          img.src = "data:image/jpeg;base64," + res;
+          // img.src = "data:image/jpeg;base64," + res;
+          img.src = res;
         });
         return;
       }
