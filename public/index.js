@@ -253,7 +253,7 @@
         // console.error("unexpected message type", typeof ev.data);
         let byteArray = new Uint8Array(ev.data);
         let binaryData = "";
-        console.log("img len: " = byteArray.length)
+        console.log("img len: " + byteArray.length);
         for (var i = 0; i < byteArray.length; i++) {
           binaryData += String.fromCharCode(byteArray[i]);
         }
