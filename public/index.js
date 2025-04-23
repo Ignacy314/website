@@ -2,6 +2,7 @@
   const status_table = document.getElementById("status");
   const data_table = document.getElementById("data");
   const detection_p = document.getElementById("detection");
+  const img = document.getElementById("video-frame");
 
   var ips;
   var n;
@@ -250,6 +251,12 @@
     conn.addEventListener("message", (ev) => {
       if (typeof ev.data !== "string") {
         console.error("unexpected message type", typeof ev.data);
+        let byteArray = new Uint8Array(ev.data);
+        let binaryData = "";
+        for (var i = 0; i < byteArray.length; i++) {
+          binaryData += String.fromCharCode(byteArray[i]);
+        }
+        img.src = "data:image/jpeg;base64," + btoa(binaryData);
         return;
       }
       if (ev.data.startsWith("detection")) {
