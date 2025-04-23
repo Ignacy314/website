@@ -250,7 +250,7 @@
     // This is where we handle messages received.
     conn.addEventListener("message", (ev) => {
       if (typeof ev.data !== "string") {
-        console.log(ev);
+        console.log(ev.data);
         // console.error("unexpected message type", typeof ev.data);
         let byteArray = new Uint8Array(ev.data);
         let binaryData = "";
