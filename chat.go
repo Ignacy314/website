@@ -9,7 +9,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/exec"
 	"sync"
 	"time"
 
@@ -70,6 +69,7 @@ func newChatServer() (*chatServer, error) {
 	cs.serveMux.Handle("/andros/", http.StripPrefix("/andros", http.FileServer(http.Dir("./public"))))
 	cs.serveMux.HandleFunc("/andros/subscribe", cs.subscribeHandler)
 	cs.serveMux.HandleFunc("/andros/publish", cs.publishHandler)
+	cs.serveMux.HandleFunc("/andros/sender", cs.senderHandler)
 
 	// path := "/home/test/andros/data/data/data.json"
 	// ips := []string{"192.168.2.104"}
@@ -118,6 +118,21 @@ func (cs *chatServer) subscribeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (cs *chatServer) senderHandler(w http.ResponseWriter, r *http.Request) {
+	err := cs.sender(w, r)
+	if errors.Is(err, context.Canceled) {
+		return
+	}
+	if websocket.CloseStatus(err) == websocket.StatusNormalClosure ||
+		websocket.CloseStatus(err) == websocket.StatusGoingAway {
+		return
+	}
+	if err != nil {
+		cs.logf("%v", err)
+		return
+	}
+}
+
 // publishHandler reads the request body with a limit of 8192 bytes and then publishes
 // the received message.
 func (cs *chatServer) publishHandler(w http.ResponseWriter, r *http.Request) {
@@ -138,6 +153,33 @@ func (cs *chatServer) publishHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusAccepted)
 }
+
+// func (cs *chatServer) listen(conn *websocket.Conn) {
+// 	ctx := context.Background()
+// 	for {
+// 		// read a message
+// 		_, messageContent, err := conn.Read(ctx)
+// 		// timeReceive := time.Now()
+// 		if err != nil {
+// 			log.Println(err)
+// 			return
+// 		}
+//
+// 		cs.publish(messageContent)
+//
+// 		// // print out that message
+// 		// fmt.Println(string(messageContent))
+// 		//
+// 		// // reponse message
+// 		// messageResponse := fmt.Sprintf("Your message is: %s. Time received : %v", messageContent, timeReceive)
+// 		//
+// 		// if err := conn.Write(ctx, messageType, []byte(messageResponse)); err != nil {
+// 		// 	log.Println(err)
+// 		// 	return
+// 		// }
+//
+// 	}
+// }
 
 // subscribe subscribes the given WebSocket to all broadcast messages.
 // It creates a subscriber with a buffered msgs chan to give some room to slower
@@ -199,6 +241,46 @@ func (cs *chatServer) subscribe(w http.ResponseWriter, r *http.Request) error {
 	}
 }
 
+func (cs *chatServer) sender(w http.ResponseWriter, r *http.Request) error {
+	log.Printf("new sender")
+	var mu sync.Mutex
+	var c *websocket.Conn
+	var closed bool
+	// cs.addSubscriber(s)
+	// defer cs.deleteSubscriber(s)
+
+	c2, err := websocket.Accept(w, r, nil)
+	if err != nil {
+		return err
+	}
+	mu.Lock()
+	if closed {
+		mu.Unlock()
+		return net.ErrClosed
+	}
+	c = c2
+	mu.Unlock()
+	defer c.CloseNow()
+
+	ctx := context.Background()
+
+	// err = writeTimeout(ctx, time.Second*5, c, cs.ips_msg)
+	// if err != nil {
+	//   return err
+	// }
+
+	for {
+		// read a message
+		_, messageContent, err := c.Read(ctx)
+		// timeReceive := time.Now()
+		if err != nil {
+			return err
+		}
+
+		cs.publish(messageContent)
+	}
+}
+
 // publish publishes the msg to all subscribers.
 // It never blocks and so messages to slow subscribers
 // are dropped.
@@ -238,38 +320,38 @@ func writeTimeout(ctx context.Context, timeout time.Duration, c *websocket.Conn,
 	return c.Write(ctx, websocket.MessageText, msg)
 }
 
-func (cs *chatServer) MonitorFile(ip, path string) {
-	log.Printf("Monitoring file: %v%v", ip, path)
-	for {
-		tail := "tail -F " + path
-		ssh := "test@" + ip
-		// log.Printf(ssh + " " + tail)
-		cmd := exec.Command("ssh", ssh, tail)
-
-		// create a pipe for the output of the script
-		cmdReader, err := cmd.StdoutPipe()
-		if err != nil {
-			log.Printf("Error creating StdoutPipe for ip %v: %v", ip, err)
-		}
-
-		scanner := bufio.NewScanner(cmdReader)
-		go func() {
-			for scanner.Scan() {
-				msg := ip + " " + scanner.Text()
-				// log.Printf("\t > %s\n", msg)
-				cs.publish([]byte(msg))
-			}
-		}()
-
-		err = cmd.Start()
-		if err != nil {
-			log.Printf("Error starting tail for ip %v: %v", ip, err)
-		}
-
-		err = cmd.Wait()
-		if err != nil {
-			log.Printf("Error waiting for tail for ip %v: %v", ip, err)
-		}
-		time.Sleep(1 * time.Second)
-	}
-}
+// func (cs *chatServer) MonitorFile(ip, path string) {
+// 	log.Printf("Monitoring file: %v%v", ip, path)
+// 	for {
+// 		tail := "tail -F " + path
+// 		ssh := "test@" + ip
+// 		// log.Printf(ssh + " " + tail)
+// 		cmd := exec.Command("ssh", ssh, tail)
+//
+// 		// create a pipe for the output of the script
+// 		cmdReader, err := cmd.StdoutPipe()
+// 		if err != nil {
+// 			log.Printf("Error creating StdoutPipe for ip %v: %v", ip, err)
+// 		}
+//
+// 		scanner := bufio.NewScanner(cmdReader)
+// 		go func() {
+// 			for scanner.Scan() {
+// 				msg := ip + " " + scanner.Text()
+// 				// log.Printf("\t > %s\n", msg)
+// 				cs.publish([]byte(msg))
+// 			}
+// 		}()
+//
+// 		err = cmd.Start()
+// 		if err != nil {
+// 			log.Printf("Error starting tail for ip %v: %v", ip, err)
+// 		}
+//
+// 		err = cmd.Wait()
+// 		if err != nil {
+// 			log.Printf("Error waiting for tail for ip %v: %v", ip, err)
+// 		}
+// 		time.Sleep(1 * time.Second)
+// 	}
+// }
