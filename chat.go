@@ -245,20 +245,20 @@ func (cs *chatServer) sender(w http.ResponseWriter, r *http.Request) error {
 	log.Printf("new sender")
 	var mu sync.Mutex
 	var c *websocket.Conn
-	var closed bool
+	// var closed bool
 	// cs.addSubscriber(s)
 	// defer cs.deleteSubscriber(s)
 
-	c2, err := websocket.Accept(w, r, nil)
+	c, err := websocket.Accept(w, r, nil)
 	if err != nil {
 		return err
 	}
-	mu.Lock()
-	if closed {
-		mu.Unlock()
-		return net.ErrClosed
-	}
-	c = c2
+	// mu.Lock()
+	// if closed {
+	// 	mu.Unlock()
+	// 	return net.ErrClosed
+	// }
+	// c = c2
 	mu.Unlock()
 	defer c.CloseNow()
 
