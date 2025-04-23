@@ -243,7 +243,7 @@ func (cs *chatServer) subscribe(w http.ResponseWriter, r *http.Request) error {
 
 func (cs *chatServer) sender(w http.ResponseWriter, r *http.Request) error {
 	log.Printf("new sender")
-	var mu sync.Mutex
+	// var mu sync.Mutex
 	var c *websocket.Conn
 	// var closed bool
 	// cs.addSubscriber(s)
@@ -259,7 +259,7 @@ func (cs *chatServer) sender(w http.ResponseWriter, r *http.Request) error {
 	// 	return net.ErrClosed
 	// }
 	// c = c2
-	mu.Unlock()
+	// mu.Unlock()
 	defer c.CloseNow()
 
 	ctx := context.Background()
