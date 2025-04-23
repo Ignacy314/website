@@ -253,6 +253,7 @@ func (cs *chatServer) sender(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
+	c.SetReadLimit(-1)
 	// mu.Lock()
 	// if closed {
 	// 	mu.Unlock()
@@ -272,7 +273,7 @@ func (cs *chatServer) sender(w http.ResponseWriter, r *http.Request) error {
 	for {
 		// read a message
 		_, messageContent, err := c.Read(ctx)
-		log.Println(string(messageContent))
+		// log.Println(string(messageContent))
 		// timeReceive := time.Now()
 		if err != nil {
 			log.Println(err)
