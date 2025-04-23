@@ -285,7 +285,7 @@ func (cs *chatServer) sender(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 
-		log.Println("publishing")
+		log.Printf("publishing, len = %d", len(messageContent))
 		cs.publish(messageContent, websocket.MessageBinary)
 	}
 }
