@@ -272,13 +272,14 @@ func (cs *chatServer) sender(w http.ResponseWriter, r *http.Request) error {
 	for {
 		// read a message
 		_, messageContent, err := c.Read(ctx)
-		// log.Println(string(messageContent))
+		log.Println(string(messageContent))
 		// timeReceive := time.Now()
 		if err != nil {
 			log.Println(err)
 			return err
 		}
 
+		log.Println("publishing")
 		cs.publish(messageContent)
 	}
 }
