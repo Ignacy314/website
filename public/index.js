@@ -98,6 +98,16 @@
   detection_timer.start();
   var drone_marker = null;
 
+  const blobToBase64 = (blob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+    });
+  };
+
   function reset() {
     detection_timer = null;
     detection_timer = new Stopwatch("detection_timer");
@@ -252,13 +262,15 @@
       if (typeof ev.data !== "string") {
         console.log(ev.data);
         // console.error("unexpected message type", typeof ev.data);
-        let byteArray = new Uint8Array(ev.data);
-        let binaryData = "";
-        console.log("img len: " + byteArray.length);
-        for (var i = 0; i < byteArray.length; i++) {
-          binaryData += String.fromCharCode(byteArray[i]);
-        }
-        img.src = "data:image/jpeg;base64," + btoa(binaryData);
+        // let byteArray = new Uint8Array(ev.data);
+        // let binaryData = "";
+        // console.log("img len: " + byteArray.length);
+        // for (var i = 0; i < byteArray.length; i++) {
+        //   binaryData += String.fromCharCode(byteArray[i]);
+        // }
+        blobToBase64(ev.data).then((res) => {
+          img.src = "data:image/jpeg;base64," + res;
+        });
         return;
       }
       if (ev.data.startsWith("detection")) {
